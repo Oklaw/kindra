@@ -32,16 +32,11 @@
     }
 
     /* BACKGROUND (match index): image layer + scrim */
-    body::before{
-  content:"";
-  position:absolute; /* not fixed */
-  top:160px; /* starts just below banner height */
-  left:0; right:0; bottom:0;
-  z-index:-2;
-  background:url("/images/about.png") center top/cover no-repeat;
-  background-attachment:scroll; /* ensures it moves with content */
+  body::before{
+  content:""; position:fixed; inset:0; z-index:-2;
+  background:url("/images/about.png") center/cover no-repeat;
   opacity:1;
-  filter:brightness(.96) saturate(1.02);
+  filter:brightness(.96) saturate(1.02) blur(.3px);
 }
     body::after{
       content:""; position:fixed; inset:0; z-index:-1;
