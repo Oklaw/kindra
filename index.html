@@ -47,26 +47,43 @@
       pointer-events:none;
     }
 
-    /* Banner */
+      /* Banner (matches logo background) */
     .notice{
-      background:#143D2A;color:#fff;text-align:center;
-      padding:.65rem .9rem;font-size:.98rem;position:relative;z-index:2;
+      background:var(--forest); color:#fff; text-align:center;
+      padding:.65rem .9rem; font-size:.98rem; position:relative; z-index:2;
     }
-    .notice a{color:var(--gold);text-decoration:underline}
+    .notice a{color:#FFD66B;text-decoration:underline}
     .notice .zips{font-weight:700}
 
-    /* Logo bar */
+    /* Logo bar (matches logo background) */
     .logo-bar{
-      position:relative; z-index:2;
-      background:#143D2A; color:#fff;
+      position:relative;
+      background:var(--forest);
+      color:#fff;
       display:flex; align-items:center; justify-content:center;
-      height:108px; padding:10px 16px;
-      box-shadow:0 8px 24px rgba(0,0,0,.18);
+      height:148px; /* taller header for larger logo */
+      padding:10px 16px;
     }
-    .brand{display:flex;flex-direction:column;align-items:center;line-height:1;text-decoration:none;color:#fff}
-    .brand .upnext{font-weight:900;font-size:40px;letter-spacing:-.01em}
-    .brand .works{margin-top:8px;font-weight:900;font-size:18px;letter-spacing:.35em}
 
+    /* Clickable brand with image logo */
+    .brand{
+      display:flex; align-items:center; justify-content:center;
+      line-height:1; text-decoration:none; color:#fff;
+    }
+
+    /* Larger, more prominent logo image */
+.brand-logo {
+  height: 150px;  /* increase from 128px */
+  width: auto;
+  display: block;
+  filter: none;
+}
+
+@media (min-width: 768px) {
+  .brand-logo {
+    height: 180px; /* increase from 156px */
+  }
+}
     /* Hamburger */
     .menu-btn{
       position:absolute; left:14px; top:50%; transform:translateY(-50%);
