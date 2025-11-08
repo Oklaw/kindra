@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,11 +32,11 @@
       background-image: url("/images/about.png");
       background-repeat: no-repeat;
       background-size: cover;
-      background-position: center 190px; /* adjust to taste */
-      background-attachment: scroll;     /* ensure it scrolls */
+      background-position: center 190px;
+      background-attachment: scroll;
     }
 
-    /* === DARK SCRIM FOR LEGIBILITY (covers viewport; no white gap) === */
+    /* === DARK SCRIM FOR LEGIBILITY === */
     body::after {
       content: "";
       position: fixed;
@@ -129,13 +130,62 @@
     .btn-primary{background:var(--forest);color:#fff;box-shadow:var(--shadow-md)}
     .btn-secondary{background:#fff;color:var(--forest-ink);border-color:var(--line)}
     .btn-tertiary{background:var(--gold);color:var(--forest);box-shadow:var(--shadow-md)}
+
+    /* Signup */
+    .signup{
+      background:var(--cream);
+      padding:2rem 1rem 2.25rem;
+      text-align:center;
+      border-top:1px solid var(--line);
+      border-radius:0 0 var(--radius-sm) var(--radius-sm);
+      margin-top:var(--space-6);
+    }
+    .signup h2{
+      color:var(--forest-ink);
+      font-size:1.35rem;
+      margin:0 0 1rem 0;
+      font-weight:900;
+      letter-spacing:-.01em;
+    }
+    .signup form{
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      gap:.5rem;
+      width:100%;
+    }
+    .signup input[type="email"]{
+      padding:12px 16px;
+      border-radius:1000px;
+      border:1px solid var(--line);
+      width:70%;
+      max-width:320px;
+      font-size:1rem;
+      background:#fff;
+    }
+    .signup button{
+      background:var(--forest);
+      color:#fff;
+      border:none;
+      border-radius:1000px;
+      padding:12px 20px;
+      font-weight:900;
+      cursor:pointer;
+      min-width:130px;
+    }
+    .success{
+      display:none;
+      color:#0a6c3b;
+      margin-top:.75rem;
+      font-weight:700;
+    }
   </style>
 </head>
 <body>
 
   <div class="notice">
     Building opportunity for <strong>teens and families</strong> — currently in Northern Virginia.
-    <a href="/index.html#signup">Join the waitlist</a>
+    <a href="#signup">Join the waitlist</a>
   </div>
 
   <header class="logo-bar" role="banner" aria-label="UpNext Works">
@@ -184,6 +234,19 @@
       <a class="btn btn-secondary" href="/customers.html">I'm a Customer</a>
       <a class="btn btn-tertiary" href="/parents.html">I'm a Parent/Guardian</a>
     </div>
+
+    <!-- Signup section -->
+    <section id="signup" class="signup" aria-label="Early access signup">
+      <h2>Sign up for early access</h2>
+      <form id="fs-form" action="https://formspree.io/f/xjkjbvdv" method="POST">
+        <label class="sr-only" for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="Enter your email" required />
+        <input type="hidden" name="source" value="upnextworks.org-about" />
+        <button type="submit" id="fs-btn">Notify Me</button>
+      </form>
+      <div class="success" id="fs-success">Thanks! You’re on the list 🎉</div>
+    </section>
+
   </main>
 
   <script>
@@ -197,6 +260,35 @@
       backdrop.addEventListener('click',close);
       document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))close();});
       panel.querySelectorAll('a').forEach(a=>a.addEventListener('click',close));
+    })();
+
+    (function () {
+      const form = document.getElementById('fs-form');
+      const btn  = document.getElementById('fs-btn');
+      const ok   = document.getElementById('fs-success');
+      if (!form) return;
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        btn.disabled = true; btn.textContent = 'Sending…';
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: new FormData(form)
+          });
+          if (res.ok) {
+            form.reset();
+            ok.style.display = 'block';
+            btn.textContent = 'Sent ✓';
+          } else {
+            btn.textContent = 'Try again';
+            btn.disabled = false;
+          }
+        } catch {
+          btn.textContent = 'Try again';
+          btn.disabled = false;
+        }
+      });
     })();
   </script>
 </body>
