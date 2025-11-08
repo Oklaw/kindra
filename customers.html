@@ -3,14 +3,15 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>UpNext Works — For Taskers</title>
-  <meta name="description" content="Pilot: Safe, local gigs for teens 14–17 in Northern Virginia. Earn after school & weekends with parental consent." />
+  <title>UpNext Works — For Customers</title>
+  <meta name="description" content="Book trusted teen help for home & community tasks in Northern Virginia. Safe, local, and parent-supervised." />
   <meta name="geo.region" content="US-VA">
   <meta name="geo.placename" content="Northern Virginia">
 
   <style>
     :root{
       --forest:#143D2A; --forest-ink:#224E3B; --cream:#F7F3EA; --offwhite:#FAF8F2;
+      --gold:#FFD66B;
       --line:rgba(0,0,0,.15);
       --font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
       --radius-lg:28px; --radius-sm:14px;
@@ -21,25 +22,21 @@
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0;
-      font-family:var(--font);
-      color:#0c2217;
-      background:var(--cream);
+      margin:0; font-family:var(--font);
+      color:#0c2217; background:var(--cream);
       -webkit-font-smoothing:antialiased;
     }
 
-    /* === BACKGROUND IMAGE (tasker.PNG) === */
+    /* Background image (customers hero) */
     body::before{
-      content:"";
-      position:fixed; inset:0; z-index:-2;
-      background:url("/images/tasker.PNG") center/cover no-repeat;
+      content:""; position:fixed; inset:0; z-index:-2;
+      background:url("/images/Raking.PNG") center/cover no-repeat;
       opacity:1;
       filter:brightness(.96) saturate(1.02) blur(.3px);
     }
-    /* === DARK SCRIM FOR LEGIBILITY === */
+    /* Dark scrim for legibility */
     body::after{
-      content:"";
-      position:fixed; inset:0; z-index:-1;
+      content:""; position:fixed; inset:0; z-index:-1;
       background:
         linear-gradient(180deg,
           rgba(20,61,42,.32) 0px,
@@ -50,15 +47,20 @@
     }
 
     /* Banner */
-    .notice{background:#143D2A;color:#fff;text-align:center;padding:.65rem .9rem;font-size:.98rem}
-    .notice a{color:#FFD66B;text-decoration:underline}
+    .notice{
+      background:#143D2A;color:#fff;text-align:center;
+      padding:.65rem .9rem;font-size:.98rem;position:relative;z-index:2;
+    }
+    .notice a{color:var(--gold);text-decoration:underline}
     .notice .zips{font-weight:700}
 
-    /* Logo bar */
+    /* Header / Logo */
     .logo-bar{
-      position:relative;background:#143D2A;color:#fff;
-      display:flex;align-items:center;justify-content:center;
-      height:108px;padding:10px 16px;
+      position:relative; z-index:2;
+      background:#143D2A; color:#fff;
+      display:flex; align-items:center; justify-content:center;
+      height:108px; padding:10px 16px;
+      box-shadow:0 8px 24px rgba(0,0,0,.18);
     }
     .brand{display:flex;flex-direction:column;align-items:center;line-height:1}
     .brand .upnext{font-weight:900;font-size:40px;letter-spacing:-.01em}
@@ -66,30 +68,53 @@
 
     /* Hamburger */
     .menu-btn{
-      position:absolute;left:14px;top:50%;transform:translateY(-50%);
-      width:44px;height:44px;border-radius:999px;border:1px solid rgba(255,255,255,.25);
-      background:transparent;display:grid;place-items:center;cursor:pointer
+      position:absolute; left:14px; top:50%; transform:translateY(-50%);
+      width:44px; height:44px; border-radius:999px; cursor:pointer;
+      border:1px solid rgba(255,255,255,.25); background:transparent; display:grid; place-items:center;
     }
-    .menu-btn:focus-visible{outline:2px solid #FFD66B;outline-offset:2px}
-    .menu-ico{width:22px;height:18px;display:block}
-    .menu-ico path{stroke:#fff;stroke-width:6;stroke-linecap:round;fill:none}
+    .menu-btn:focus-visible{outline:2px solid var(--gold); outline-offset:2px}
+    .menu-ico{width:22px; height:18px; display:block}
+    .menu-ico path{stroke:#fff; stroke-width:6; stroke-linecap:round; fill:none}
 
-    /* Dropdown panel + backdrop */
+    /* Dropdown + backdrop */
     .menu-panel{
-      position:fixed;left:0;right:0;top:160px;background:#fff;border-bottom:1px solid var(--line);
-      box-shadow:0 10px 24px rgba(0,0,0,.12);transform:translateY(-12px);opacity:0;pointer-events:none;
-      transition:transform .18s ease,opacity .18s ease;z-index:20
+      position:fixed; left:0; right:0; top:160px;
+      background:#fff; border-bottom:1px solid var(--line);
+      box-shadow:0 10px 24px rgba(0,0,0,.12);
+      transform:translateY(-12px); opacity:0; pointer-events:none;
+      transition:transform .18s ease, opacity .18s ease; z-index:20;
     }
-    .menu-panel.open{transform:none;opacity:1;pointer-events:auto}
-    .menu-list{list-style:none;margin:0;padding:6px 0}
-    .menu-list a{display:block;padding:14px 18px;text-decoration:none;color:var(--forest-ink);font-weight:800;font-size:1.05rem}
+    .menu-panel.open{transform:none; opacity:1; pointer-events:auto;}
+    .menu-list{list-style:none; margin:0; padding:6px 0;}
+
+    /* Uniform Tasker-style links in burger */
+    .menu-list a{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px;
+      padding:16px 18px;
+      text-decoration:none;
+      text-transform:uppercase;
+      letter-spacing:.04em;
+      font-weight:800; font-size:.98rem;
+      color:var(--forest-ink);
+      position:relative;
+    }
     .menu-list a + a{border-top:1px solid var(--line)}
-    .backdrop{position:fixed;inset:0;background:rgba(0,0,0,.32);opacity:0;pointer-events:none;transition:opacity .18s ease;z-index:19}
-    .backdrop.show{opacity:1;pointer-events:auto}
+    .menu-list a:hover{background:var(--offwhite)}
+    .menu-list a:focus-visible{outline:2px solid var(--gold); outline-offset:-2px}
+    .menu-list a::after{
+      content:"";
+      width:16px; height:16px; flex:0 0 16px;
+      mask: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"><path fill="%23000" d="M9.29 6.71a1 1 0 0 0 0 1.41L13.17 12l-3.88 3.88a1 1 0 1 0 1.41 1.41l4.59-4.59a1 1 0 0 0 0-1.41L10.7 6.7a1 1 0 0 0-1.41.01Z"/></svg>') center/contain no-repeat;
+      background:#4a5b54;
+    }
+
+    .backdrop{position:fixed; inset:0; background:rgba(0,0,0,.32); opacity:0; pointer-events:none; transition:opacity .18s ease; z-index:19;}
+    .backdrop.show{opacity:1; pointer-events:auto;}
 
     /* Page container */
     .wrap{
-      width:100%;max-width:460px;margin:0 auto;padding:var(--space-8) var(--space-4);
+      width:100%; max-width:460px; margin:0 auto; padding:var(--space-8) var(--space-4);
       background:rgba(255,255,255,.40);
       backdrop-filter:saturate(1.05) blur(.6px);
       border-radius:0 0 var(--radius-sm) var(--radius-sm);
@@ -97,27 +122,21 @@
       color:#0d2619;
     }
 
-    /* Text contrast */
+    /* Typography */
     h1,h2,h3,.title{color:#092014;text-shadow:0 2px 4px rgba(0,0,0,.28)}
     p,li{color:#0f2a1b;text-shadow:0 1px 2px rgba(0,0,0,.18)}
-
     .eyebrow{font-weight:900;letter-spacing:.08em;font-size:.78rem;color:#e9f4ee;text-transform:uppercase;margin:0 0 .6rem;text-shadow:0 1px 2px rgba(0,0,0,.35)}
     .title{margin:.25rem 0 var(--space-4);font-weight:900;font-size:clamp(26px,6.2vw,36px);letter-spacing:-.02em;line-height:1.14}
     .sub{margin:0 0 var(--space-6);color:#10311f}
 
-    /* Steps & cards */
-    .steps{display:grid;gap:12px;margin:var(--space-6) 0}
-    .card{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff;box-shadow:var(--shadow-sm)}
-    .card h3{margin:.2rem 0 .35rem;font-size:1.05rem}
-    .card p{margin:0;color:#2c3f37;font-size:.98rem;text-shadow:none}
-
-    /* Task grid */
+    /* Task grid (icons) */
     .tasks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:var(--space-6) 0}
     .task{border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;background:#fff}
     .task .ico{font-size:22px;display:block;margin-bottom:6px}
     .task span{font-weight:800;color:#2b453a;text-shadow:none}
 
-    /* Checklists */
+    /* Cards / lists */
+    .card{border:1px solid var(--line);border-radius:16px;padding:14px;background:#fff;box-shadow:var(--shadow-sm)}
     .list{margin:0;padding:0;list-style:none}
     .list li{display:flex;gap:10px;align-items:flex-start;padding:8px 0}
     .check{color:#1E3C2A;font-weight:900}
@@ -126,10 +145,14 @@
     .ctas{display:grid;gap:var(--space-4);margin:var(--space-6) 0}
     .btn{
       height:56px;border-radius:var(--radius-lg);font-weight:900;font-size:18px;
-      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid transparent;cursor:pointer
+      display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid transparent;cursor:pointer;
+      transition:transform .06s ease, filter .15s ease;
     }
+    .btn:active{transform:translateY(1px)}
     .btn-primary{background:#143D2A;color:#fff;box-shadow:var(--shadow-md)}
     .btn-secondary{background:#fff;color:#224E3B;border-color:var(--line)}
+    .btn-tertiary{background:var(--gold);color:var(--forest);box-shadow:var(--shadow-md)}
+    .btn-tertiary:hover{filter:brightness(.95)}
 
     /* Signup */
     .signup{
@@ -142,84 +165,15 @@
     .signup input[type="email"]{padding:12px 16px;border-radius:1000px;border:1px solid var(--line);width:70%;max-width:320px;font-size:1rem;background:#fff}
     .signup button{background:#143D2A;color:#fff;border:none;border-radius:1000px;padding:12px 20px;font-weight:900;cursor:pointer;min-width:130px}
     .success{display:none;color:#0a6c3b;margin-top:.75rem;font-weight:700}
-
-    /* FAQ */
-    .faq{margin:var(--space-6) 0}
-    .faq details{border-top:1px solid var(--line);padding:12px 0;background:rgba(255,255,255,.65)}
-    .faq details:first-of-type{border-top:none}
-    .faq summary{cursor:pointer;font-weight:800;color:#153624;text-shadow:none}
-    .faq p{margin:.5rem 0 0;color:#1E3C2A;text-shadow:none}
-
-    /* ===== Age Compliance "Check Zone" (SCOPED) ===== */
-    #rules .sub{margin:0 0 1rem; color:#365447; font-size:.98rem}
-    #rules .bubble-grid{display:grid; gap:14px; grid-template-columns:1fr}
-    @media(min-width:640px){ #rules .bubble-grid{ grid-template-columns:repeat(3,1fr) } }
-
-    #rules details.bubble{
-      position:relative; padding:0; border-radius:18px; background:#fff;
-      border:1px solid var(--line);
-      box-shadow:var(--shadow-sm);
-      transition:box-shadow .2s ease, border-color .2s ease;
-    }
-    #rules details.bubble[open]{
-      box-shadow:0 8px 24px rgba(0,0,0,.12);
-      border-color:rgba(0,0,0,.18);
-    }
-    /* tail */
-    #rules details.bubble::after{
-      content:""; position:absolute; left:50%; transform:translateX(-50%);
-      bottom:-10px; width:0; height:0;
-      border-left:10px solid transparent; border-right:10px solid transparent;
-      border-top:10px solid #fff;
-      filter:drop-shadow(0 -1px 0 rgba(0,0,0,.08));
-      pointer-events:none;
-    }
-
-    #rules summary{
-      list-style:none; cursor:pointer; outline:none;
-      display:flex; flex-direction:column; gap:10px;
-      padding:16px 16px 14px;
-    }
-    #rules summary::-webkit-details-marker{ display:none; }
-
-    #rules .tag{
-      display:inline-flex; align-items:center; gap:8px;
-      background:rgba(20,61,42,.08); color:#143D2A; font-weight:800;
-      border-radius:999px; padding:6px 12px; font-size:.92rem
-    }
-    #rules .tag .dot{width:8px; height:8px; border-radius:999px; background:#1f4b37}
-
-    #rules .headline{color:#0F291C; font-weight:800; letter-spacing:-.01em; font-size:1.02rem; text-shadow:0 1px 2px rgba(0,0,0,.08)}
-    #rules .snippet{margin:0; color:#213c31; font-size:.95rem}
-
-    #rules .chev{
-      margin-left:auto; margin-top:-28px; align-self:flex-end;
-      display:inline-flex; align-items:center; justify-content:center;
-      width:32px; height:32px; border-radius:999px;
-      border:1px solid rgba(0,0,0,.08); background:#FAF8F2;
-    }
-    #rules .chev svg{ width:18px; height:18px; transition:transform .2s ease; }
-    #rules details[open] .chev svg{ transform:rotate(180deg); }
-
-    #rules .content{
-      padding:0 16px 16px; border-top:1px solid var(--line); margin-top:6px;
-    }
-    #rules .content h3{ margin:.75rem 0 .4rem; font-size:1rem; color:#0F291C }
-    #rules .age-list{ list-style:none; padding:0; margin:.1rem 0 .25rem }
-    #rules .age-list li{ display:flex; gap:8px; align-items:flex-start; padding:6px 0; color:#213c31; font-size:.95rem }
-    #rules .age-list .ok{ font-weight:900; color:#1f4b37 }
-    #rules .age-list .no{ font-weight:900; color:#9a3e2b }
-    #rules .hours, #rules .note{ margin:.4rem 0 0; font-size:.9rem; color:#365447 }
-    #rules .note strong{ color:#143D2A }
   </style>
 </head>
 <body>
 
-  <!-- Service area banner -->
+  <!-- Banner -->
   <div class="notice">
-    Pilot for teens in <strong>Northern Virginia</strong> — ZIPs:
-    <span class="zips">20169, 20155, 20136, 20143, 20109</span>. After-school & weekend availability.
-    <a href="#apply">Apply now</a>
+    Now piloting in <strong>Northern Virginia</strong> — currently serving ZIPs:
+    <span class="zips">20169, 20155, 20136, 20143, 20109</span>.
+    <a href="#signup">Join the waitlist</a>
   </div>
 
   <!-- Header -->
@@ -235,32 +189,25 @@
     </div>
   </header>
 
-  <!-- Dropdown menu -->
+  <!-- Burger dropdown -->
   <div class="menu-panel" id="menuPanel" role="menu" aria-label="Site navigation">
     <nav class="menu-list">
-      <a href="/" role="menuitem">Home</a>
-      <a href="/customers.html" role="menuitem">For Customers</a>
+      <a href="/index.html" role="menuitem">Home</a>
+      <a href="/about.html" role="menuitem">About</a>
+      <a href="/parents.html" role="menuitem">For Parents/Guardians</a>
       <a href="/taskers.html" role="menuitem">For Taskers</a>
-      <a href="#rules" role="menuitem">What you can do (by age)</a>
-      <a href="#faq" role="menuitem">FAQ</a>
+      <a href="/customers.html" role="menuitem">For Customers</a>
     </nav>
   </div>
   <div class="backdrop" id="menuBackdrop" hidden></div>
 
   <!-- Page -->
   <main class="wrap">
-    <p class="eyebrow">FOR TASKERS (14–17)</p>
-    <h1 class="title">Earn safe, local gigs after school & weekends</h1>
-    <p class="sub">Build skills, help neighbors, and earn money with tasks like yardwork, snow shoveling, pet care, and more — with parental consent and clear safety guidelines.</p>
+    <p class="eyebrow">FOR CUSTOMERS</p>
+    <h1 class="title">Book trusted teen help for home & community tasks</h1>
+    <p class="sub">Safe, local help for yardwork, snow shoveling, pet care, babysitting, cleaning, and tutoring — with parental consent and clear guidelines.</p>
 
-    <!-- Benefits -->
-    <ul class="list" aria-label="Why join">
-      <li><span class="check">✓</span> Flexible, short tasks that fit around school</li>
-      <li><span class="check">✓</span> Learn responsibility, communication & reliability</li>
-      <li><span class="check">✓</span> References for jobs, college, and community service</li>
-    </ul>
-
-    <!-- Tasks -->
+    <!-- Popular task types -->
     <section class="tasks" aria-label="Popular tasks">
       <div class="task"><span class="ico">🪴</span><span>Yardwork</span></div>
       <div class="task"><span class="ico">❄️</span><span>Snow</span></div>
@@ -270,133 +217,41 @@
       <div class="task"><span class="ico">📚</span><span>Tutoring</span></div>
     </section>
 
-    <!-- How it works -->
-    <section class="steps" aria-label="How it works">
-      <div class="card"><h3>1) Apply to the pilot</h3><p>You and a parent/guardian submit your info so we can verify age and consent.</p></div>
-      <div class="card"><h3>2) Get matched</h3><p>We match you with nearby tasks that fit your schedule and restrictions.</p></div>
-      <div class="card"><h3>3) Do the task, get paid</h3><p>Follow the safety checklist. Pilot payments may be cash or simple digital options.</p></div>
-    </section>
-
-    <!-- Requirements -->
-    <section aria-label="Requirements" class="card">
-      <h3>Pilot requirements</h3>
+    <!-- Why UpNext -->
+    <section class="card" aria-label="Why UpNext">
+      <h3>Why choose UpNext</h3>
       <ul class="list">
-        <li><span class="check">✓</span> Ages 14–17 in pilot ZIPs</li>
-        <li><span class="check">✓</span> Parent/guardian consent & involvement</li>
-        <li><span class="check">✓</span> Agree to Code of Conduct & task guidelines</li>
-        <li><span class="check">✓</span> Virginia youth-labor rules apply (14–15 may need a work permit; 16–17 generally do not)</li>
+        <li><span class="check">✓</span> Verified teen taskers with parent/guardian oversight</li>
+        <li><span class="check">✓</span> Clear safety guidelines matched to age-appropriate tasks</li>
+        <li><span class="check">✓</span> Local, flexible help that supports teens’ growth</li>
       </ul>
     </section>
 
-    <!-- ===== Age Compliance "Check Zone" (SCOPED ACCORDION) ===== -->
-    <section id="rules" class="compliance" aria-label="Age-based work rules">
-      <h2>✅ Know what you can do — Virginia youth work rules</h2>
-      <p class="sub">Tap a bubble to expand details. We’ll filter tasks automatically during sign up.</p>
-
-      <div class="bubble-grid">
-        <!-- 14–15 -->
-        <details class="bubble" aria-labelledby="age1415-head">
-          <summary>
-            <span class="tag"><span class="dot" aria-hidden="true"></span> Ages 14–15</span>
-            <div class="headline" id="age1415-head">Allowed tasks</div>
-            <p class="snippet">Yardwork (hand tools), snow shoveling, pet care, babysitting, light indoor tasks.</p>
-            <span class="chev" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            </span>
-          </summary>
-          <div class="content">
-            <h3>Details</h3>
-            <ul class="age-list">
-              <li><span class="ok">✓</span> Raking, weeding, bagging (hand tools only)</li>
-              <li><span class="ok">✓</span> Snow shoveling & walkway salting</li>
-              <li><span class="ok">✓</span> Pet care & dog walking</li>
-              <li><span class="ok">✓</span> Babysitting / mother’s helper</li>
-              <li><span class="ok">✓</span> Light indoor tasks (tidying, organizing, simple cleaning)</li>
-              <li><span class="no">⚠</span> <strong>No</strong> motorized/power equipment (mowers, chainsaws, power trimmers)</li>
-            </ul>
-            <p class="hours">⏰ Limits: outside school hours; daily/weekly caps; earlier evening end times.</p>
-            <p class="note">📄 <strong>Work permit</strong> usually required. Parent/guardian consent and oversight required.</p>
-          </div>
-        </details>
-
-        <!-- 16–17 -->
-        <details class="bubble" aria-labelledby="age1617-head">
-          <summary>
-            <span class="tag"><span class="dot" aria-hidden="true"></span> Ages 16–17</span>
-            <div class="headline" id="age1617-head">Allowed tasks</div>
-            <p class="snippet">Push mowing & leaf blowing, snow, pet care, babysitting, tutoring.</p>
-            <span class="chev" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            </span>
-          </summary>
-          <div class="content">
-            <h3>Details</h3>
-            <ul class="age-list">
-              <li><span class="ok">✓</span> Yardwork incl. push lawn mowing & leaf blowing</li>
-              <li><span class="ok">✓</span> Snow shoveling, pet care, babysitting</li>
-              <li><span class="ok">✓</span> Tutoring / homework help</li>
-              <li><span class="no">⚠</span> <strong>No</strong> hazardous/heavy equipment or ladders above allowed heights</li>
-            </ul>
-            <p class="hours">⏰ No work during school hours; later evening limits may apply; weekly caps vary by school status.</p>
-            <p class="note">👪 Parent/guardian consent & coordination required.</p>
-          </div>
-        </details>
-
-        <!-- 18+ -->
-        <details class="bubble" aria-labelledby="age18-head">
-          <summary>
-            <span class="tag"><span class="dot" aria-hidden="true"></span> Ages 18+</span>
-            <div class="headline" id="age18-head">Allowed tasks</div>
-            <p class="snippet">All standard UpNext tasks; equipment per safety guidance; flexible hours.</p>
-            <span class="chev" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                   stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
-            </span>
-          </summary>
-          <div class="content">
-            <h3>Details</h3>
-            <ul class="age-list">
-              <li><span class="ok">✓</span> All standard UpNext tasks</li>
-              <li><span class="ok">✓</span> Equipment use per safety guidelines</li>
-              <li><span class="ok">✓</span> Flexible hours per agreement</li>
-            </ul>
-            <p class="hours">⏰ Treated as adult worker; normal scheduling rules apply.</p>
-            <p class="note">🛡 Follow site safety, insurance, and customer requirements.</p>
-          </div>
-        </details>
-      </div>
+    <!-- How it works for customers -->
+    <section class="card" aria-label="How it works">
+      <h3>How it works</h3>
+      <ul class="list">
+        <li><span class="check">1)</span> Tell us what you need and your timeframe</li>
+        <li><span class="check">2)</span> We match you with nearby teen taskers</li>
+        <li><span class="check">3)</span> Confirm details; task gets done with simple feedback after</li>
+      </ul>
     </section>
 
     <!-- CTAs -->
     <div class="ctas" id="apply">
-      <a class="btn btn-primary" href="#signup">Apply to the pilot</a>
-      <a class="btn btn-secondary" href="#parents">Parent/Guardian start</a>
+      <a class="btn btn-primary" href="#signup">Join the pilot waitlist</a>
+      <a class="btn btn-secondary" href="/taskers.html">See how teens participate</a>
+      <a class="btn btn-tertiary" href="/parents.html">Info for Parents/Guardians</a>
     </div>
 
-    <!-- Parent section -->
-    <section id="parents" class="card" aria-label="Parent information">
-      <h3>For parents/guardians</h3>
-      <p>UpNext Works is designed with oversight in mind. You’ll review tasks, confirm availability, and help handle transportation and safety at the job site. We’ll share simple guidance on boundaries and what to expect.</p>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq" class="faq" aria-label="Tasker FAQ">
-      <details><summary>Do I need a work permit?</summary><p>In Virginia, teens 14–15 typically need a work permit; 16–17 generally do not. We’ll guide you during onboarding based on the task and your age.</p></details>
-      <details><summary>How many hours can I work?</summary><p>Pilot tasks are short and scheduled after school or on weekends. Actual limits depend on age and school status; we adhere to Virginia youth-labor rules.</p></details>
-      <details><summary>How does payment work in the pilot?</summary><p>We’re testing simple options (cash or a basic digital method) and asking customers to confirm completion and provide feedback.</p></details>
-      <details><summary>What if a task seems unsafe?</summary><p>You can decline any task. We encourage you to call your parent/guardian and UpNext staff if anything feels off.</p></details>
-    </section>
-
-    <!-- Apply / Waitlist (Formspree) -->
-    <section class="signup" aria-label="Apply to the pilot" id="signup">
-      <h2>Apply / join the pilot waitlist</h2>
+    <!-- Signup -->
+    <section class="signup" aria-label="Join the pilot" id="signup">
+      <h2>Get early access</h2>
       <form id="fs-form" action="https://formspree.io/f/xjkjbvdv" method="POST">
         <label class="sr-only" for="email">Email</label>
-        <input id="email" name="email" type="email" placeholder="Your email (teen or parent)" required />
-        <input type="hidden" name="role" value="tasker" />
-        <input type="hidden" name="source" value="taskers-landing" />
+        <input id="email" name="email" type="email" placeholder="Your email" required />
+        <input type="hidden" name="role" value="customer" />
+        <input type="hidden" name="source" value="customers-landing" />
         <button type="submit" id="fs-btn">Notify Me</button>
       </form>
       <div class="success" id="fs-success">Thanks! We’ll reach out with next steps.</div>
@@ -405,50 +260,20 @@
 
   <!-- JS -->
   <script>
-    // Menu
+    // Menu open/close
     (function(){
       const btn = document.getElementById('menuBtn');
       const panel = document.getElementById('menuPanel');
       const backdrop = document.getElementById('menuBackdrop');
-
-      function open() {
-        panel.classList.add('open');
-        backdrop.hidden = false;
-        backdrop.classList.add('show');
-        btn.setAttribute('aria-expanded','true');
-      }
-      function close() {
-        panel.classList.remove('open');
-        backdrop.classList.remove('show');
-        setTimeout(()=>{ backdrop.hidden = true; }, 180);
-        btn.setAttribute('aria-expanded','false');
-      }
-      btn.addEventListener('click', () =>
-        panel.classList.contains('open') ? close() : open()
-      );
+      const open = () => { panel.classList.add('open'); backdrop.hidden=false; backdrop.classList.add('show'); btn.setAttribute('aria-expanded','true'); };
+      const close = () => { panel.classList.remove('open'); backdrop.classList.remove('show'); setTimeout(()=>{backdrop.hidden=true},180); btn.setAttribute('aria-expanded','false'); };
+      btn.addEventListener('click', () => panel.classList.contains('open') ? close() : open());
       backdrop.addEventListener('click', close);
-      document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && panel.classList.contains('open')) close();
-      });
+      document.addEventListener('keydown', e => { if (e.key==='Escape' && panel.classList.contains('open')) close(); });
       panel.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
     })();
 
-    // Accordion behavior scoped to #rules bubbles (only one open at a time)
-    (function(){
-      const zone = document.querySelector('#rules');
-      if (!zone) return;
-      const bubbles = Array.from(zone.querySelectorAll('details.bubble'));
-      zone.addEventListener('toggle', (e) => {
-        const target = e.target;
-        if (!(target instanceof HTMLDetailsElement)) return;
-        if (!target.classList.contains('bubble')) return;
-        if (target.open) {
-          bubbles.forEach(d => { if (d !== target) d.open = false; });
-        }
-      });
-    })();
-
-    // Formspree inline success (unchanged)
+    // Formspree inline success
     (function () {
       const form = document.getElementById('fs-form');
       const btn  = document.getElementById('fs-btn');
@@ -458,11 +283,7 @@
         e.preventDefault();
         btn.disabled = true; btn.textContent = 'Sending…';
         try {
-          const res = await fetch(form.action, {
-            method: 'POST',
-            headers: { 'Accept': 'application/json' },
-            body: new FormData(form)
-          });
+          const res = await fetch(form.action, { method: 'POST', headers: { 'Accept': 'application/json' }, body: new FormData(form) });
           if (res.ok) { form.reset(); ok.style.display = 'block'; btn.textContent = 'Sent ✓'; }
           else { btn.textContent = 'Try again'; btn.disabled = false; }
         } catch {
