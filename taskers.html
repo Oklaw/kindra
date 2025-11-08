@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -11,7 +10,9 @@
 
   <style>
     :root{
-      --forest:#143D2A; --forest-ink:#224E3B; --cream:#F7F3EA; --offwhite:#FAF8F2;
+      /* Set the site-wide forest green to match the logo exactly */
+      --forest:#0F291C; 
+      --forest-ink:#224E3B; --cream:#F7F3EA; --offwhite:#FAF8F2;
       --line:rgba(0,0,0,.15);
       --font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
       --radius-lg:28px; --radius-sm:14px;
@@ -51,18 +52,20 @@
     }
 
     /* Banner */
-    .notice{background:#143D2A;color:#fff;text-align:center;padding:.65rem .9rem;font-size:.98rem}
+    .notice{background:var(--forest);color:#fff;text-align:center;padding:.65rem .9rem;font-size:.98rem}
     .notice a{color:#FFD66B;text-decoration:underline}
     .notice .zips{font-weight:700}
 
     /* Logo bar */
     .logo-bar{
-      position:relative;background:#143D2A;color:#fff;
+      position:relative;background:var(--forest);color:#fff;
       display:flex;align-items:center;justify-content:center;
-      height:108px;padding:10px 16px;
+      height:128px;padding:10px 16px;
     }
     .brand{display:flex;align-items:center;justify-content:center;line-height:1;text-decoration:none;color:#fff}
-    .brand-logo{height:64px; width:auto; display:block}
+    /* Bigger logo */
+    .brand-logo{height:92px; width:auto; display:block}
+    @media (min-width:768px){ .brand-logo{height:102px} }
 
     /* Hamburger */
     .menu-btn{
@@ -128,8 +131,8 @@
       height:56px;border-radius:var(--radius-lg);font-weight:900;font-size:18px;
       display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid transparent;cursor:pointer
     }
-    .btn-primary{background:#143D2A;color:#fff;box-shadow:var(--shadow-md)}
-    .btn-secondary{background:#fff;color:#224E3B;border-color:var(--line)}
+    .btn-primary{background:var(--forest);color:#fff;box-shadow:var(--shadow-md)}
+    .btn-secondary{background:#fff;color:var(--forest-ink);border-color:var(--line)}
 
     /* Signup */
     .signup{
@@ -140,7 +143,7 @@
     .signup h2{font-size:1.35rem;margin:0 0 1rem;font-weight:900;color:#0F291C;text-shadow:0 2px 4px rgba(0,0,0,.25)}
     .signup form{display:flex;flex-wrap:wrap;justify-content:center;gap:.5rem;width:100%}
     .signup input[type="email"]{padding:12px 16px;border-radius:1000px;border:1px solid var(--line);width:70%;max-width:320px;font-size:1rem;background:#fff}
-    .signup button{background:#143D2A;color:#fff;border:none;border-radius:1000px;padding:12px 20px;font-weight:900;cursor:pointer;min-width:130px}
+    .signup button{background:var(--forest);color:#fff;border:none;border-radius:1000px;padding:12px 20px;font-weight:900;cursor:pointer;min-width:130px}
     .success{display:none;color:#0a6c3b;margin-top:.75rem;font-weight:700}
 
     /* FAQ */
@@ -148,7 +151,7 @@
     .faq details{border-top:1px solid var(--line);padding:12px 0;background:rgba(255,255,255,.65)}
     .faq details:first-of-type{border-top:none}
     .faq summary{cursor:pointer;font-weight:800;color:#153624;text-shadow:none}
-    .faq p{margin:.5rem 0 0;color:#1E3C2A{text-shadow:none}
+    .faq p{margin:.5rem 0 0;color:#1E3C2A;text-shadow:none}
 
     /* ===== Age Compliance "Check Zone" (SCOPED) ===== */
     #rules .sub{margin:0 0 1rem; color:#365447; font-size:.98rem}
@@ -184,7 +187,7 @@
 
     #rules .tag{
       display:inline-flex; align-items:center; gap:8px;
-      background:rgba(20,61,42,.08); color:#143D2A; font-weight:800;
+      background:rgba(20,61,42,.08); color:var(--forest); font-weight:800;
       border-radius:999px; padding:6px 12px; font-size:.92rem
     }
     #rules .tag .dot{width:8px; height:8px; border-radius:999px; background:#1f4b37}
@@ -210,7 +213,7 @@
     #rules .age-list .ok{ font-weight:900; color:#1f4b37 }
     #rules .age-list .no{ font-weight:900; color:#9a3e2b }
     #rules .hours, #rules .note{ margin:.4rem 0 0; font-size:.9rem; color:#365447 }
-    #rules .note strong{ color:#143D2A }
+    #rules .note strong{ color:var(--forest) }
   </style>
 </head>
 <body>
@@ -229,7 +232,7 @@
         <path d="M6 6 H42 M6 18 H42 M6 30 H42"></path>
       </svg>
     </button>
-    <!-- Replaced text logo with image logo that links to landing page -->
+    <!-- Larger image logo that links to landing page -->
     <a class="brand" href="/index.html" aria-label="UpNext Works Home">
       <img class="brand-logo" src="/images/logo.png" alt="UpNext Works logo" />
     </a>
@@ -363,4 +366,113 @@
               <li><span class="ok">✓</span> Flexible hours per agreement</li>
             </ul>
             <p class="hours">⏰ Treated as adult worker; normal scheduling rules apply.</p>
-            <p
+            <p class="note">🛡 Follow site safety, insurance, and customer requirements.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- CTAs -->
+    <div class="ctas" id="apply">
+      <a class="btn btn-primary" href="#signup">Apply to the pilot</a>
+      <a class="btn btn-secondary" href="#parents">Parent/Guardian start</a>
+    </div>
+
+    <!-- Parent section -->
+    <section id="parents" class="card" aria-label="Parent information">
+      <h3>For parents/guardians</h3>
+      <p>UpNext Works is designed with oversight in mind. You’ll review tasks, confirm availability, and help handle transportation and safety at the job site. We’ll share simple guidance on boundaries and what to expect.</p>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="faq" aria-label="Tasker FAQ">
+      <details><summary>Do I need a work permit?</summary><p>In Virginia, teens 14–15 typically need a work permit; 16–17 generally do not. We’ll guide you during onboarding based on the task and your age.</p></details>
+      <details><summary>How many hours can I work?</summary><p>Pilot tasks are short and scheduled after school or on weekends. Actual limits depend on age and school status; we adhere to Virginia youth-labor rules.</p></details>
+      <details><summary>How does payment work in the pilot?</summary><p>We’re testing simple options (cash or a basic digital method) and asking customers to confirm completion and provide feedback.</p></details>
+      <details><summary>What if a task seems unsafe?</summary><p>You can decline any task. We encourage you to call your parent/guardian and UpNext staff if anything feels off.</p></details>
+    </section>
+
+    <!-- Apply / Waitlist (Formspree) -->
+    <section class="signup" aria-label="Apply to the pilot" id="signup">
+      <h2>Apply / join the pilot waitlist</h2>
+      <form id="fs-form" action="https://formspree.io/f/xjkjbvdv" method="POST">
+        <label class="sr-only" for="email">Email</label>
+        <input id="email" name="email" type="email" placeholder="Your email (teen or parent)" required />
+        <input type="hidden" name="role" value="tasker" />
+        <input type="hidden" name="source" value="taskers-landing" />
+        <button type="submit" id="fs-btn">Notify Me</button>
+      </form>
+      <div class="success" id="fs-success">Thanks! We’ll reach out with next steps.</div>
+    </section>
+  </main>
+
+  <!-- JS -->
+  <script>
+    // Menu
+    (function(){
+      const btn = document.getElementById('menuBtn');
+      const panel = document.getElementById('menuPanel');
+      const backdrop = document.getElementById('menuBackdrop');
+
+      function open() {
+        panel.classList.add('open');
+        backdrop.hidden = false;
+        backdrop.classList.add('show');
+        btn.setAttribute('aria-expanded','true');
+      }
+      function close() {
+        panel.classList.remove('open');
+        backdrop.classList.remove('show');
+        setTimeout(()=>{ backdrop.hidden = true; }, 180);
+        btn.setAttribute('aria-expanded','false');
+      }
+      btn.addEventListener('click', () =>
+        panel.classList.contains('open') ? close() : open()
+      );
+      backdrop.addEventListener('click', close);
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape' && panel.classList.contains('open')) close();
+      });
+      panel.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
+    })();
+
+    // Accordion behavior scoped to #rules bubbles (only one open at a time)
+    (function(){
+      const zone = document.querySelector('#rules');
+      if (!zone) return;
+      const bubbles = Array.from(zone.querySelectorAll('details.bubble'));
+      zone.addEventListener('toggle', (e) => {
+        const target = e.target;
+        if (!(target instanceof HTMLDetailsElement)) return;
+        if (!target.classList.contains('bubble')) return;
+        if (target.open) {
+          bubbles.forEach(d => { if (d !== target) d.open = false; });
+        }
+      });
+    })();
+
+    // Formspree inline success (unchanged)
+    (function () {
+      const form = document.getElementById('fs-form');
+      const btn  = document.getElementById('fs-btn');
+      const ok   = document.getElementById('fs-success');
+      if (!form) return;
+      form.addEventListener('submit', async function (e) {
+        e.preventDefault();
+        btn.disabled = true; btn.textContent = 'Sending…';
+        try {
+          const res = await fetch(form.action, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: new FormData(form)
+          });
+          if (res.ok) { form.reset(); ok.style.display = 'block'; btn.textContent = 'Sent ✓'; }
+          else { btn.textContent = 'Try again'; btn.disabled = false; }
+        } catch {
+          btn.textContent = 'Try again'; btn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
