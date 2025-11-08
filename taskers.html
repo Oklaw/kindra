@@ -74,16 +74,19 @@
       display:flex; align-items:center; justify-content:center;
       line-height:1; text-decoration:none; color:#fff;
     }
-
-   /* AFTER (flush logo) */
-.brand-logo{
-  height:128px;
-  width:auto;
-  display:block;
-  filter:none; /* ensures no shadow if a previous rule lingers */
+    
+/* increase logo height from 128px */
+.brand-logo {
+  height: 150px;  /* increase from 128px */
+  width: auto;
+  display: block;
+  filter: none;
 }
-@media (min-width:768px){
-  .brand-logo{ height:156px; }
+
+@media (min-width: 768px) {
+  .brand-logo {
+    height: 180px; /* increase from 156px */
+  }
 }
 
     /* Hamburger */
