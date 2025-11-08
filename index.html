@@ -10,16 +10,17 @@
   <meta name="geo.placename" content="Northern Virginia">
 
   <style>
-    :root{
-      --forest:#143D2A; --forest-ink:#224E3B; --cream:#F7F3EA; --offwhite:#FAF8F2;
-      --gold:#FFD66B;
-      --line:rgba(0,0,0,.15);
-      --font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
-      --radius-lg:28px; --radius-sm:14px;
-      --shadow-sm:0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
-      --shadow-md:0 8px 24px rgba(0,0,0,.12);
-      --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-6:1.5rem; --space-8:2rem;
-    }
+ :root{
+  --forest:#003924; /* matches Tasker page + logo background */
+  --forest-ink:#224E3B; --cream:#F7F3EA; --offwhite:#FAF8F2;
+  --gold:#FFD66B;
+  --line:rgba(0,0,0,.15);
+  --font: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+  --radius-lg:28px; --radius-sm:14px;
+  --shadow-sm:0 1px 2px rgba(0,0,0,.06), 0 2px 8px rgba(0,0,0,.04);
+  --shadow-md:0 8px 24px rgba(0,0,0,.12);
+  --space-2:.5rem; --space-3:.75rem; --space-4:1rem; --space-6:1.5rem; --space-8:2rem;
+}
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
@@ -210,12 +211,10 @@
       </svg>
     </button>
 
-    <!-- Make logo a link to home -->
-    <a class="brand" href="/" aria-label="UpNext Works Home">
-      <span class="upnext">UpNext</span>
-      <span class="works">WORKS</span>
-    </a>
-  </header>
+   <!-- Clickable logo image (matches Tasker page style) -->
+<a class="brand" href="/index.html" aria-label="UpNext Works Home">
+  <img class="brand-logo" src="/images/logo.png" alt="UpNext Works logo" />
+</a>
 
   <!-- Dropdown menu -->
   <div class="menu-panel" id="menuPanel" role="menu" aria-label="Site navigation">
