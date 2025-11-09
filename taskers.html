@@ -103,6 +103,29 @@
       }
     }
 
+     /* ===== Improve spacing between hero sections and boxes ===== */
+
+    /* Space between title, paragraph, and button */
+    .hero h1 {
+      margin-bottom: 18px; /* space below title */
+    }
+
+    .hero p {
+      margin-bottom: 24px; /* space below subtitle */
+    }
+
+    /* Space below the pilot button before the boxes */
+    .hero .apply {
+      margin-top: 10px;    /* space above the button */
+      margin-bottom: 40px; /* add gap before the boxes */
+    }
+
+    /* Add a little extra breathing room between the info boxes */
+    .grid {
+      gap: 32px;           /* increase spacing between the two columns */
+      margin-top: 10px;    /* add space above the entire grid section */
+    }
+
     /* Two-column info layout */
     .grid{ display:grid; gap:18px; grid-template-columns: 1.1fr 1fr; }
     @media(max-width:960px){ .grid{ grid-template-columns:1fr; } }
