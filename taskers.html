@@ -74,6 +74,17 @@
     }
     .apply:hover{ filter:brightness(.96); }
 
+        /* Desktop: keep the bubble from stretching full width */
+    @media (min-width: 768px) {
+      .apply{
+        width:auto;            /* shrink to fit text */
+        justify-self:start;    /* prevent stretch in grid */
+        align-self:start;      /* align nicely to top/left */
+        padding:12px 20px;     /* keep good padding */
+        display:inline-flex;   /* maintain pill style */
+      }
+    }
+
     /* Two-column info layout */
     .grid{ display:grid; gap:18px; grid-template-columns: 1.1fr 1fr; }
     @media(max-width:960px){ .grid{ grid-template-columns:1fr; } }
