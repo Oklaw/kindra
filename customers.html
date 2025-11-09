@@ -60,12 +60,22 @@
       /* keep subject centered on common screens */
       object-fit:cover;
     }
-    .hero-overlay{
-      position:absolute; inset:0;
-      background:linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.32) 55%, rgba(0,0,0,.38) 100%);
-      display:grid; place-items:center;
-      text-align:center; padding:40px 18px;
-      transform: translateY(-186px); /* ===== CHANGE POSITION OF SCREEN AND TEXT ===== */
+   .hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.32) 55%, rgba(0,0,0,.38) 100%);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 40px 18px;
+  /* No transform here — mobile version stays as-is */
+}
+    
+/* ===== Desktop-only adjustment ===== */
+@media (min-width: 900px) {
+  .hero-overlay {
+    transform: translateY(-186px); /* Raise text only on wider screens */
+  }
     }
     .hero-title{
       color:#fff; margin:0 0 10px 0;
