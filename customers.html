@@ -23,30 +23,6 @@
     *{box-sizing:border-box}
     body{ margin:0; font-family:var(--font); color:var(--ink); background:var(--cream); -webkit-font-smoothing:antialiased; }
 
-    /* Desktop-only: make the hero image span edge-to-edge */
-@media (min-width: 900px) {
-  /* If your hero is inside a centered container, this pushes it full-bleed */
-  .hero-visual{
-    width: 100vw;                      /* fill the full viewport width */
-    margin-left: calc(50% - 50vw);     /* counter the parent’s centering */
-    border-radius: 0;                  /* remove rounded corners on desktop */
-    box-shadow: none;                  /* optional: remove card shadow */
-  }
-
-  /* Ensure the image covers the section nicely */
-  .hero-visual img{
-    width: 100%;
-    height: 70vh;                      /* adjust height as you like: 60–85vh */
-    object-fit: cover;                 /* cover without squishing */
-    display: block;
-  }
-
-  /* Give the overlay breathing room on desktop */
-  .hero-overlay{
-    padding: 64px 24px;
-  }
-}
-
     /* ===== Header (kept the same) ===== */
     .site-header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line); }
     .nav-wrap{ height:72px; display:flex; align-items:center; gap:18px; max-width:1100px; margin:0 auto; padding:0 16px; }
@@ -84,13 +60,12 @@
       /* keep subject centered on common screens */
       object-fit:cover;
     }
-  .hero-overlay{
-  position:absolute; inset:0;
-  background:linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.32) 55%, rgba(0,0,0,.38) 100%);
-  display:grid; place-items:center;  /* mobile centered */
-  text-align:center; padding:40px 18px;
-  /* ❌ remove any transform from here */
-}
+    .hero-overlay{
+      position:absolute; inset:0;
+      background:linear-gradient(180deg, rgba(0,0,0,.10) 0%, rgba(0,0,0,.32) 55%, rgba(0,0,0,.38) 100%);
+      display:grid; place-items:center;
+      text-align:center; padding:40px 18px;
+    }
     .hero-title{
       color:#fff; margin:0 0 10px 0;
       font-weight:900; letter-spacing:-.02em;
@@ -119,53 +94,6 @@
     .apply:hover{ filter:brightness(1.08); transform:translateY(-2px); }
     .hero-overlay .apply {
   margin-top: 36px; /* increase spacing between subtitle and button */
-}
-
-/* ===== Desktop-only adjustments: full-bleed hero + move text up ===== */
-@media (min-width: 900px) {
-  /* Make the hero section span edge-to-edge on desktop */
-  .hero-visual{
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    border-radius: 0;
-    box-shadow: none;
-  }
-  .hero-visual img{
-    width: 100%;
-    height: 72vh;         /* adjust to taste (60–85vh) */
-    object-fit: cover;
-    display: block;
-  }
-
-  /* Keep the overlay pinned to the image (no translate), just push content up
-     by reducing top padding and slightly strengthening the gradient */
-  .hero-overlay{
-    position: absolute; inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;    /* start at top */
-    padding: 8vh 24px 4vh;          /* smaller top padding = higher text */
-    background: linear-gradient(
-      180deg,
-      rgba(0,0,0,.48) 0%,
-      rgba(0,0,0,.36) 45%,
-      rgba(0,0,0,.22) 100%
-    );
-  }
-
-  .hero-title{ margin-bottom: 16px; }
-  .hero-overlay .apply{ margin-top: 28px; }  /* space under subtitle */
-}
-  }
-
-  .hero-sub {
-    margin-bottom: 28px; /* more room before button */
-  }
-
-  .hero-overlay .apply {
-    margin-top: 0; /* aligns the button closer to text */
-  }
 }
 
     /* ===== Two customer-focused cards ===== */
@@ -276,7 +204,21 @@
       </div>
     </section>
 
-  
+    <!-- BENEFITS -->
+    <section class="benefits" aria-label="Why Kindra & How it works">
+      <article class="card">
+        <h2>Convenient & quick</h2>
+        <ul class="checklist">
+          <li><span class="check-ico">✓</span> <span class="muted">Get matched with nearby Taskers and get your tasks completed pronto.</span></li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>Experienced & insured</h2>
+        <ul class="checklist">
+          <li><span class="check-ico">✓</span> <span class="muted">Taskers are vetted and show up ready with supplies. We offer peace-of-mind insurance.</span></li>
+        </ul>
+      </article>
     </section>
   </main>
 
