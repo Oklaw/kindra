@@ -124,7 +124,7 @@
     .title{margin:.25rem 0 var(--space-4);font-weight:900;font-size:clamp(26px,6.2vw,36px);letter-spacing:-.02em;line-height:1.14}
     .sub{margin:0 0 var(--space-6);color:#10311f}
 
-    /* Task grid */
+    /* Former task grid (styles left intact in case you revert) */
     .tasks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:var(--space-6) 0}
     .task{border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;background:#fff}
     .task .ico{font-size:22px;display:block;margin-bottom:6px}
@@ -142,8 +142,9 @@
     .btn{height:56px;border-radius:var(--radius-lg);font-weight:900;font-size:18px;
       display:inline-flex;align-items:center;justify-content:center;text-decoration:none;border:1px solid transparent;cursor:pointer;}
     .btn-primary{background:var(--forest);color:#fff;box-shadow:var(--shadow-md)}
-    .btn-secondary{background:#fff;color:var(--forest-ink);border-color:var(--line)}
-    .btn-tertiary{background:var(--gold);color:var(--forest);box-shadow:var(--shadow-md)}
+    .btn-secondary{background:#fff;color:#fff;border-color:var(--line)}
+    .btn-secondary{background:#fff;color:#0e1f17;border-color:var(--line)}
+    .btn-tertiary{background:var(--gold);color:#0e1f17;box-shadow:var(--shadow-md)}
 
     .signup{
       background:rgba(247,243,234,.50);
@@ -155,6 +156,15 @@
     .signup input[type="email"]{padding:12px 16px;border-radius:1000px;border:1px solid var(--line);width:70%;max-width:320px;font-size:1rem;background:#fff}
     .signup button{background:var(--forest);color:#fff;border:none;border-radius:1000px;padding:12px 20px;font-weight:900;cursor:pointer;min-width:130px}
     .success{display:none;color:#0a6c3b;margin-top:.75rem;font-weight:700}
+
+    /* New: customer app mock image block */
+    .app-mock img{
+      width:100%;
+      display:block;
+      border-radius:20px;
+      box-shadow:0 10px 24px rgba(0,0,0,.10);
+      margin: var(--space-6) 0; /* breathing room above/below */
+    }
   </style>
 </head>
 <body>
@@ -236,19 +246,15 @@
     </div>
   </header>
 
-  <!-- Main content (unchanged) -->
+  <!-- Main content -->
   <main class="wrap">
     <p class="eyebrow">FOR CUSTOMERS</p>
     <h1 class="title">Book trusted teen help for home & community tasks</h1>
     <p class="sub">Safe, local help for yardwork, snow shoveling, pet care, babysitting, cleaning, and tutoring — with parental consent and clear guidelines.</p>
 
-    <section class="tasks" aria-label="Popular tasks">
-      <div class="task"><span class="ico">🪴</span><span>Yardwork</span></div>
-      <div class="task"><span class="ico">❄️</span><span>Snow</span></div>
-      <div class="task"><span class="ico">🐾</span><span>Pet Care</span></div>
-      <div class="task"><span class="ico">🧹</span><span>Cleaning</span></div>
-      <div class="task"><span class="ico">🧸</span><span>Babysitting</span></div>
-      <div class="task"><span class="ico">📚</span><span>Tutoring</span></div>
+    <!-- REPLACED: tiles -> customer app mock image -->
+    <section class="app-mock" aria-label="Customer app preview">
+      <img src="/images/customerapp.png" alt="Kindra customer app: request a task and see available taskers">
     </section>
 
     <section id="why" class="card" aria-label="Why UpNext">
@@ -289,7 +295,7 @@
       });
     }
 
-    // Desktop dropdowns: also open/close on click for accessibility
+    // Desktop dropdowns: open/close on click too
     document.querySelectorAll('.has-submenu .nav-link').forEach(btn=>{
       const menu = btn.parentElement.querySelector('.submenu');
       btn.addEventListener('click', (e)=>{
