@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Workish — Customer Login</title>
+  <meta name="description" content="Sign in to hire trusted teen help with verified, parent-supervised taskers." />
+  <meta name="geo.region" content="US-VA">
+  <meta name="geo.placename" content="Northern Virginia">
+
+  <!-- Optional CSRF placeholder (wire to backend later) -->
+  <meta name="csrf-token" content="">
+
+  <style>
+    :root{
+      --forest:#003924;
+      --ink:#0f2a1b;
+      --sub:#224E3B;
+      --cream:#F7F3EA;
+      --off:#FAF8F2;
+      --gold:#FFD66B;
+      --line:rgba(0,0,0,.14);
+      --font:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      --r-sm:14px; --r-lg:24px;
+      --shadow:0 10px 24px rgba(0,0,0,.10);
+      --shadow-lg:0 16px 42px rgba(0,0,0,.18);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:var(--font); color:var(--ink); background:var(--cream);
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Background image + soft overlay (same family as other pages) */
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-2;
+      background:url("/images/customer.PNG") center/cover no-repeat;
+      filter:brightness(.96) saturate(1.02) blur(.3px);
+    }
+    body::after{
+      content:""; position:fixed; inset:0; z-index:-1;
+      background:linear-gradient(180deg,
+        rgba(0,57,36,.30) 0px,
+        rgba(0,57,36,.24) 280px,
+        rgba(247,243,234,.18) 60%,
+        rgba(247,243,234,.22) 100%);
+      pointer-events:none;
+    }
+
+    /* ===== Header (kept consistent) ===== */
+    .site-header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line); }
+    .nav-wrap{ height:84px; display:flex; align-items:center; gap:18px; max-width:1100px; margin:0 auto; padding:0 16px; }
+    .nav-brand{ display:flex; align-items:center; text-decoration:none; }
+    .nav-logo{
+      max-height:86px; width:auto; display:block; object-fit:contain;
+    }
+    .nav-main{ display:flex; align-items:center; gap:6px; margin-left:8px; }
+    .nav-item{ position:relative; }
+    .nav-link{ background:transparent; border:none; cursor:pointer; padding:10px 12px; border-radius:10px; font-weight:700; color:#0e1f17; }
+    .submenu{ position:absolute; top:100%; left:0; min-width:220px; background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,.12); padding:8px; display:none; }
+    .submenu a{ display:block; padding:10px 12px; border-radius:8px; color:#224E3B; text-decoration:none; font-weight:600; }
+    .submenu a:hover{ background:var(--off); }
+    @media(hover:hover){ .has-submenu:hover .submenu{ display:block; } }
+    .nav-burger{ margin-left:auto; width:42px; height:42px; border-radius:10px; border:1px solid rgba(0,0,0,.12); background:#fff; display:none; align-items:center; justify-content:center; gap:4px; flex-direction:column; cursor:pointer; }
+    .nav-burger span{ width:20px; height:2px; background:#0e1f17; display:block; }
+    .mobile-panel{ border-top:1px solid var(--line); background:#fff; box-shadow:0 12px 28px rgba(0,0,0,.12); }
+    .m-item{ border-bottom:1px solid var(--line); padding:6px 8px; }
+    .m-item summary{ cursor:pointer; padding:12px 8px; font-weight:800; }
+    .m-item a{ display:block; padding:10px 12px; text-decoration:none; color:#224E3B; }
+    .m-item a:hover{ background:var(--off); border-radius:8px; }
+    @media(max-width:900px){ .nav-main{display:none;} .nav-burger{display:flex;} }
+
+    /* ===== Page shell ===== */
+    .shell{ max-width:1100px; margin:0 auto; padding:28px 16px 56px; }
+
+    /* Login hero */
+    .hero{
+      display:flex; flex-direction:column; gap:10px; margin-bottom:28px; color:#fff; text-shadow:0 3px 6px rgba(0,0,0,.40);
+    }
+    .hero h1{ margin:0; font-size:clamp(26px,4.6vw,40px); line-height:1.12; letter-spacing:-.02em; font-weight:900; color:#fff; }
+    .hero p{ margin:0; font-weight:600; font-size:1.05rem; color:#ffffff; }
+
+    /* Centered login layout */
+    .login-wrap{
+      display:grid; grid-template-columns: 1fr 1fr; gap:18px;
+    }
+    @media(max-width:900px){ .login-wrap{ grid-template-columns:1fr; } }
+
+    .card{
+      background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow);
+    }
+    .login-card{ padding:20px 18px 18px; max-width:520px; }
+    .login-head{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+    .login-head h2{ margin:0; font-size:1.35rem; letter-spacing:-.01em; }
+    .hint{ color:#355346; font-size:.95rem; margin:0 0 12px; }
+
+    .field{ display:flex; flex-direction:column; gap:6px; margin-top:12px; }
+    .field label{ font-weight:800; color:#173627; }
+    .control{
+      display:flex; align-items:center; gap:8px; background:var(--off);
+      border:1px solid var(--line); border-radius:12px; padding:12px 14px; color:#1b2d23;
+    }
+    .control input{ border:none; outline:none; background:transparent; flex:1; font-size:15px; color:#1b2d23; }
+    .toggle-btn{ background:#fff; border:1px solid var(--line); border-radius:8px; padding:6px 8px; font-weight:800; cursor:pointer; }
+    .actions{ display:flex; justify-content:space-between; align-items:center; margin-top:12px; }
+    .remember{ display:flex; align-items:center; gap:8px; font-weight:700; color:#355346; }
+    .cta{
+      width:100%; height:52px; margin-top:14px; border:none; border-radius:14px; font-weight:900; font-size:18px; color:#fff; background:var(--forest); cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.12);
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+    }
+    .cta[disabled]{ opacity:.65; cursor:not-allowed; }
+    .tiny{ font-size:.92rem; color:#375445; margin-top:8px; }
+    .error{ margin-top:10px; padding:10px 12px; border:1px solid #e7c5c5; background:#fff3f3; color:#7a1e1e; border-radius:10px; display:none; }
+    .success{ margin-top:10px; padding:10px 12px; border:1px solid #cde4d6; background:#f3fbf7; color:#134b33; border-radius:10px; display:none; }
+
+    /* Right column card (optional marketing / help) */
+    .side-card{ padding:18px; }
+    .side-card h3{ margin:0 0 6px; }
+    .bullets{ margin:10px 0 0; padding-left:18px; color:#173627; }
+    .bullets li{ margin:6px 0; }
+
+    .sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+  </style>
+</head>
+<body>
+
+  <!-- Header (logo + menus) -->
+  <header class="site-header" role="banner">
+    <div class="nav-wrap">
+      <!-- Left: Logo -->
+      <a class="nav-brand" href="/index.html" aria-label="Workish Home">
+        <img src="/images/worklogo.PNG" alt="Workish" class="nav-logo">
+      </a>
+
+      <nav class="nav-main" aria-label="Primary">
+        <div class="nav-item has-submenu"></div>
+
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">Join Workish</button>
+          <div class="submenu">
+            <a href="/taskers.html">For Taskers & Parents</a>
+            <a href="/customers.html">For Customers</a>
+            <a href="/safety.html">Safety & Oversight</a>
+          </div>
+        </div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">Why Workish</button>
+          <div class="submenu">
+            <a href="/about.html#mission">Mission</a>
+            <a href="/about.html#trust">Trust & verification</a>
+            <a href="/about.html#faq">FAQ</a>
+          </div>
+        </div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">What’s new</button>
+          <div class="submenu">
+            <a href="/updates.html#pilot-news">Pilot updates</a>
+            <a href="/updates.html#roadmap">Roadmap</a>
+            <a href="/updates.html#changelog">Changelog</a>
+          </div>
+        </div>
+      </nav>
+
+      <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-controls="mobilePanel" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div id="mobilePanel" class="mobile-panel" hidden>
+      <details class="m-item"><summary>Join Workish</summary>
+        <a href="/taskers.html">For Taskers & Parents</a>
+        <a href="/customers.html">For Customers</a>
+        <a href="/safety.html">Safety & Oversight</a>
+      </details>
+      <details class="m-item"><summary>Why Workish</summary>
+        <a href="/about.html#mission">Mission</a>
+        <a href="/about.html#trust">Trust & Verification</a>
+        <a href="/about.html#faq">FAQ</a>
+      </details>
+      <details class="m-item"><summary>What’s new</summary>
+        <a href="/updates.html#pilot-news">Pilot updates</a>
+        <a href="/updates.html#roadmap">Roadmap</a>
+        <a href="/updates.html#changelog">Changelog</a>
+      </details>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="shell">
+    <section class="hero" aria-label="Intro">
+      <h1>Welcome back</h1>
+      <p>Sign in to hire local, verified teen help — fast.</p>
+    </section>
+
+    <section class="login-wrap" aria-label="Customer login">
+      <!-- Login card -->
+      <div class="card login-card" role="form" aria-labelledby="loginTitle">
+        <div class="login-head">
+          <h2 id="loginTitle">Customer Login</h2>
+          <a href="/signup.html" class="tiny"><strong>New?</strong> Create an account →</a>
+        </div>
+        <p class="hint">Use your email and password. We’ll keep your session secure.</p>
+
+        <form id="loginForm" novalidate>
+          <div class="field">
+            <label for="email">Email</label>
+            <div class="control">
+              <input id="email" name="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label for="password">Password</label>
+            <div class="control">
+              <input id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="8" />
+              <button class="toggle-btn" type="button" id="togglePw" aria-pressed="false" aria-controls="password">Show</button>
+            </div>
+          </div>
+
+          <div class="actions">
+            <label class="remember">
+              <input type="checkbox" id="remember" name="remember" /> Remember me
+            </label>
+            <a class="tiny" href="/reset-password.html">Forgot password?</a>
+          </div>
+
+          <button class="cta" id="loginBtn" type="submit" aria-live="polite">
+            <span id="btnTxt">Sign In</span>
+            <span id="btnSpin" class="sr-only" aria-hidden="true">Loading…</span>
+          </button>
+
+          <div id="err" class="error" role="alert"></div>
+          <div id="ok" class="success" role="status"></div>
+
+          <p class="tiny">By signing in, you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.</p>
+        </form>
+      </div>
+
+      <!-- Side card (optional help/benefits) -->
+      <aside class="card side-card" aria-label="Why create an account">
+        <h3>Why create a Workish account?</h3>
+        <ul class="bullets">
+          <li>Book verified, parent-supervised teen help in minutes</li>
+          <li>Transparent rates and availability</li>
+          <li>Secure messaging and scheduling</li>
+          <li>Receipt history for taxes and records</li>
+        </ul>
+        <p class="tiny" style="margin-top:10px;">Questions? <a href="/contact.html">Contact us</a>.</p>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    // Mobile panel toggle (kept)
+    const burger=document.getElementById('navBurger');
+    const panel=document.getElementById('mobilePanel');
+    if(burger&&panel){
+      burger.addEventListener('click',()=>{
+        const open=panel.hasAttribute('hidden');
+        if(open) panel.removeAttribute('hidden'); else panel.setAttribute('hidden','');
+        burger.setAttribute('aria-expanded', String(open));
+      });
+    }
+
+    // Desktop dropdowns: also toggle on click (kept)
+    document.querySelectorAll('.has-submenu .nav-link').forEach(btn=>{
+      const menu=btn.parentElement.querySelector('.submenu');
+      btn.addEventListener('click',e=>{
+        const visible = menu && menu.style.display==='block';
+        document.querySelectorAll('.submenu').forEach(m=>m.style.display='none');
+        if(menu) menu.style.display = visible ? 'none' : 'block';
+        btn.setAttribute('aria-expanded', String(!visible));
+        e.stopPropagation();
+      });
+    });
+    document.addEventListener('click',()=>{
+      document.querySelectorAll('.submenu').forEach(m=>m.style.display='none');
+      document.querySelectorAll('.has-submenu .nav-link').forEach(b=>b.setAttribute('aria-expanded','false'));
+    });
+
+    // Login form behavior
+    const form = document.getElementById('loginForm');
+    const email = document.getElementById('email');
+    const password = document.getElementById('password');
+    const remember = document.getElementById('remember');
+    const btn = document.getElementById('loginBtn');
+    const btnTxt = document.getElementById('btnTxt');
+    const btnSpin = document.getElementById('btnSpin');
+    const err = document.getElementById('err');
+    const ok = document.getElementById('ok');
+    const togglePw = document.getElementById('togglePw');
+
+    // Show/Hide password
+    togglePw.addEventListener('click', ()=>{
+      const isPw = password.getAttribute('type') === 'password';
+      password.setAttribute('type', isPw ? 'text' : 'password');
+      togglePw.textContent = isPw ? 'Hide' : 'Show';
+      togglePw.setAttribute('aria-pressed', String(isPw));
+      password.focus();
+    });
+
+    // Basic email format check
+    function validEmail(v){
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+    }
+
+    function setBusy(isBusy){
+      btn.disabled = isBusy;
+      btnTxt.textContent = isBusy ? 'Signing in…' : 'Sign In';
+      btnSpin.classList.toggle('sr-only', !isBusy);
+    }
+
+    form.addEventListener('submit', async (e)=>{
+      e.preventDefault();
+      err.style.display='none'; ok.style.display='none';
+      const emailVal = email.value.trim().toLowerCase();
+      const pwVal = password.value;
+
+      // Client-side validation
+      if(!validEmail(emailVal)){ err.textContent='Enter a valid email address.'; err.style.display='block'; email.focus(); return; }
+      if(pwVal.length < 8){ err.textContent='Password must be at least 8 characters.'; err.style.display='block'; password.focus(); return; }
+
+      // Prepare request
+      setBusy(true);
+      try{
+        const csrf = document.querySelector('meta[name="csrf-token"]')?.content || '';
+        const res = await fetch('/api/login', {
+          method:'POST',
+          headers:{ 'Content-Type':'application/json', 'X-CSRF-Token': csrf },
+          credentials:'include',
+          body: JSON.stringify({
+            email: emailVal,
+            password: pwVal,
+            remember: !!remember.checked
+          })
+        });
+
+        if(res.ok){
+          ok.textContent='Signed in. Redirecting…';
+          ok.style.display='block';
+          // Redirect to dashboard (adjust as needed)
+          setTimeout(()=>{ window.location.href = '/dashboard.html'; }, 600);
+        }else{
+          const data = await res.json().catch(()=>({}));
+          err.textContent = data?.message || 'Unable to sign in. Check your credentials and try again.';
+          err.style.display='block';
+        }
+      }catch(ex){
+        err.textContent='Network error. Please try again.';
+        err.style.display='block';
+      }finally{
+        setBusy(false);
+      }
+    });
+  </script>
+</body>
+</html>
