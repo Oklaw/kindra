@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Workish — Hire Help</title>
+  <meta name="description" content="Request leaf raking, pet care, snow shoveling and more. Verified teen taskers with parent oversight." />
+  <meta name="geo.region" content="US-VA">
+  <meta name="geo.placename" content="Northern Virginia">
+
+  <style>
+    :root{
+      --forest:#003924;
+      --ink:#0f2a1b;
+      --sub:#224E3B;
+      --cream:#F7F3EA;
+      --off:#FAF8F2;
+      --gold:#FFD66B;
+      --line:rgba(0,0,0,.14);
+      --font:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      --r-sm:14px; --r-lg:24px;
+      --shadow:0 10px 24px rgba(0,0,0,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:var(--font); color:var(--ink); background:var(--cream);
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Background image + soft overlay (same style family as your other pages) */
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-2;
+      background:url("/images/customer.PNG") center/cover no-repeat;
+      filter:brightness(.96) saturate(1.02) blur(.3px);
+    }
+    body::after{
+      content:""; position:fixed; inset:0; z-index:-1;
+      background:linear-gradient(180deg,
+        rgba(0,57,36,.30) 0px,
+        rgba(0,57,36,.24) 280px,
+        rgba(247,243,234,.18) 60%,
+        rgba(247,243,234,.22) 100%);
+      pointer-events:none;
+    }
+
+    /* ===== Header (kept consistent) ===== */
+    .site-header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line); }
+    .nav-wrap{ height:84px; display:flex; align-items:center; gap:18px; max-width:1100px; margin:0 auto; padding:0 16px; }
+    .nav-brand{ display:flex; align-items:center; text-decoration:none; }
+.nav-logo {
+  max-height: 86px;     /* fills banner but leaves a few pixels breathing room */
+  width: auto;           /* keeps proportions correct */
+  display: block;
+  object-fit: contain;
+}
+    .nav-main{ display:flex; align-items:center; gap:6px; margin-left:8px; }
+    .nav-item{ position:relative; }
+    .nav-link{ background:transparent; border:none; cursor:pointer; padding:10px 12px; border-radius:10px; font-weight:700; color:#0e1f17; }
+    .submenu{ position:absolute; top:100%; left:0; min-width:220px; background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,.12); padding:8px; display:none; }
+    .submenu a{ display:block; padding:10px 12px; border-radius:8px; color:#224E3B; text-decoration:none; font-weight:600; }
+    .submenu a:hover{ background:var(--off); }
+    @media(hover:hover){ .has-submenu:hover .submenu{ display:block; } }
+    .nav-burger{ margin-left:auto; width:42px; height:42px; border-radius:10px; border:1px solid rgba(0,0,0,.12); background:#fff; display:none; align-items:center; justify-content:center; gap:4px; flex-direction:column; cursor:pointer; }
+    .nav-burger span{ width:20px; height:2px; background:#0e1f17; display:block; }
+    .mobile-panel{ border-top:1px solid var(--line); background:#fff; box-shadow:0 12px 28px rgba(0,0,0,.12); }
+    .m-item{ border-bottom:1px solid var(--line); padding:6px 8px; }
+    .m-item summary{ cursor:pointer; padding:12px 8px; font-weight:800; }
+    .m-item a{ display:block; padding:10px 12px; text-decoration:none; color:#224E3B; }
+    .m-item a:hover{ background:var(--off); border-radius:8px; }
+    @media(max-width:900px){ .nav-main{display:none;} .nav-burger{display:flex;} }
+
+    /* ===== Page shell (wider customer layout) ===== */
+    .shell{ max-width:1100px; margin:0 auto; padding:28px 16px 56px; }
+   .hero{
+  display:flex; flex-direction:column; gap:12px;
+  /* more space below the top text */
+  margin-bottom:42px;
+  /* make the text white and pop over the photo */
+  color:#fff;
+  text-shadow:0 3px 6px rgba(0,0,0,.40);
+}
+   .hero h1{
+  margin:0;
+  font-size:clamp(26px,4.6vw,42px);
+  line-height:1.12; letter-spacing:-.02em;
+  color:#fff;            /* white */
+  font-weight:900;       /* bolder */
+}
+    .hero p{
+  margin:0;
+  color:#ffffff;         /* white */
+  font-weight:600;       /* bolder */
+  font-size:1.05rem;
+}
+    /* Apply bubble (button style) */
+.apply{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  padding:12px 22px;
+  border-radius:999px;
+  background:var(--forest);
+  color:#fff;
+  font-weight:900;
+  text-decoration:none;
+  font-size:1.05rem;
+  border:2px solid #fff;  /* makes it pop */
+  box-shadow:0 0 8px rgba(255,255,255,.35), 0 8px 24px rgba(0,0,0,.25);
+  transition:transform .12s ease, filter .2s ease;
+  margin-top:16px;
+}
+.apply:hover{
+  filter:brightness(1.08);
+  transform:translateY(-2px);
+}
+    /* Two-column app-like layout */
+    .grid{
+      display:grid; gap:18px;
+      grid-template-columns: 1.1fr 1fr; /* left slightly wider */
+    }
+    @media(max-width:990px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{
+      background:#fff; border:1px solid var(--line); border-radius:18px; box-shadow:var(--shadow);
+    }
+
+    /* Request composer (left, top) */
+    .composer{ padding:18px; }
+    .pill{ display:flex; justify-content:center; align-items:center; gap:10px; padding:10px 14px; border:1px solid var(--line); border-radius:999px; background:#fff; font-weight:800; text-align:center; }
+    .pill strong{ color:var(--forest); }
+    .bar{ display:flex; gap:10px; flex-wrap:wrap; margin:12px 0 14px; }
+    .chip{
+      border:1px solid var(--line); background:var(--off); padding:10px 14px; border-radius:12px; font-weight:700; cursor:pointer;
+    }
+    .chip.is-on{ background:#eaf2ed; border-color:#cfe0d6; }
+    .row{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:10px; }
+    @media(max-width:560px){ .row{ grid-template-columns:1fr; } }
+    .input{
+      display:flex; gap:8px; align-items:center; background:var(--off); border:1px solid var(--line); border-radius:12px; padding:12px 14px; color:#2A3A33;
+    }
+    .input input, .input select{ border:none; outline:none; background:transparent; flex:1; font-size:15px; color:#1b2d23; }
+    .btn-primary{
+      width:100%; height:54px; margin-top:12px; border:none; border-radius:14px; font-weight:900; font-size:18px; color:#fff; background:var(--forest); cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,.12);
+    }
+    .tiny{ font-size:.92rem; color:#375445; margin-top:6px; }
+
+    /* Map preview (left, bottom) */
+    .map{ overflow:hidden; }
+    .map #map{ width:100%; height:320px; display:block; border-radius:18px; }
+
+    /* Tasker list (right column) */
+    .list{ display:flex; flex-direction:column; gap:12px; padding:16px; }
+    .sort-bar{ display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border:1px solid var(--line); border-radius:12px; background:#fff; }
+    .sort{ display:flex; align-items:center; gap:10px; }
+    .select{ border:1px solid var(--line); border-radius:12px; padding:10px 12px; font-weight:700; background:#fff; }
+    .profile{
+      display:grid; grid-template-columns:auto 1fr auto; gap:14px; padding:14px; border:1px solid var(--line); border-radius:16px; background:var(--off);
+    }
+    .avatar{
+      width:64px; height:64px; border-radius:999px; background:linear-gradient(180deg,#eaf2ed,#f8fbf7);
+      display:grid; place-items:center; border:1px solid #d7e4dc;
+    }
+    .avatar svg{ width:36px; height:36px; color:#2d5f49; }
+    .meta h3{ margin:2px 0 6px; font-size:1.05rem; }
+    .meta p{ margin:0; color:#355346; font-size:.96rem; }
+    .rate{ font-weight:900; color:#173627; }
+    .badge{ display:inline-block; padding:6px 10px; border-radius:999px; background:#eaf2ed; border:1px solid #d2e2d9; color:#184a33; font-weight:800; font-size:.88rem; }
+
+    /* Accessibility helpers */
+    .sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+  </style>
+</head>
+<body>
+
+  <!-- Header (logo + menus) -->
+  <header class="site-header" role="banner">
+    <div class="nav-wrap">
+      <!-- Left: Logo -->
+      <a class="nav-brand" href="/index.html" aria-label="Workish Home">
+        <img src="/images/worklogo.PNG" alt="Workish" class="nav-logo">
+      </a>
+
+      <nav class="nav-main" aria-label="Primary">
+        <div class="nav-item has-submenu">
+        </div>
+
+       <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">Join Workish</button>
+          <div class="submenu">
+            <a href="/taskers.html">For Taskers & Parents</a>
+            <a href="/customers.html">For Customers</a>
+            <a href="/safety.html">Safety & Oversight</a>
+          </div>
+        </div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">Why Workish</button>
+          <div class="submenu">
+            <a href="/about.html#mission">Mission</a>
+            <a href="/about.html#trust">Trust & verification</a>
+            <a href="/about.html#faq">FAQ</a>
+          </div>
+        </div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">What’s new</button>
+          <div class="submenu">
+            <a href="/updates.html#pilot-news">Pilot updates</a>
+            <a href="/updates.html#roadmap">Roadmap</a>
+            <a href="/updates.html#changelog">Changelog</a>
+          </div>
+        </div>
+      </nav>
+
+      <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-controls="mobilePanel" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div id="mobilePanel" class="mobile-panel" hidden>
+      <details class="m-item"><summary>Join Workish</summary>
+        <a href="/taskers.html">For Taskers & Parents</a>
+        <a href="/customers.html">For Customers</a>
+        <a href="/safety.html">Safety & Oversight</a>
+      </details>
+      <details class="m-item"><summary>Why Workish</summary>
+        <a href="/about.html#mission">Mission</a>
+        <a href="/about.html#trust">Trust & Verification</a>
+        <a href="/about.html#faq">FAQ</a>
+      </details>
+      <details class="m-item"><summary>What’s new</summary>
+        <a href="/updates.html#pilot-news">Pilot updates</a>
+        <a href="/updates.html#roadmap">Roadmap</a>
+        <a href="/updates.html#changelog">Changelog</a>
+      </details>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="shell">
+    <section class="hero" aria-label="Intro">
+      <h1>Hire trusted teen help — fast</h1>
+      <p>Because everyone starts somewhere - usually with a rake.</p>
+      <a class="apply" href="/tasker-registration.html">Teen & Parent Pilot Registration →</a>
+      <a class="apply" href="/login.html">Login or Register with Workish →</a>
+    </section>
+
+    <section class="grid" aria-label="Request and matches">
+      <!-- Left: Request composer + map -->
+      <div>
+        <!-- UPDATED BOX (only this box changed) -->
+        <div class="card composer" aria-label="Find taskers">
+          <div id="composerTitle" class="pill" aria-live="polite">How many Taskers are in your Zip?</div>
+
+          <div class="row" style="margin-top:12px">
+            <!-- Task Filter -->
+            <label class="input" aria-label="Task filter">
+              <span>Task Filter</span>
+              <select id="taskFilter">
+                <option>All Tasks</option>
+                <option>Yardwork</option>
+                <option>Snow Shoveling</option>
+                <option>Pet Care</option>
+                <option>Babysitting</option>
+                <option>Tutoring</option>
+                <option>Light Errands</option>
+                <option>Other</option>
+              </select>
+            </label>
+
+            <!-- State -->
+            <label class="input" aria-label="State">
+              <span>State</span>
+              <select id="stateSelect" required>
+                <option value="">Select</option>
+                <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
+                <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
+                <option>DC</option><option>FL</option><option>GA</option><option>HI</option>
+                <option>ID</option><option>IL</option><option>IN</option><option>IA</option>
+                <option>KS</option><option>KY</option><option>LA</option><option>ME</option>
+                <option>MD</option><option>MA</option><option>MI</option><option>MN</option>
+                <option>MS</option><option>MO</option><option>MT</option><option>NE</option>
+                <option>NV</option><option>NH</option><option>NJ</option><option>NM</option>
+                <option>NY</option><option>NC</option><option>ND</option><option>OH</option>
+                <option>OK</option><option>OR</option><option>PA</option><option>RI</option>
+                <option>SC</option><option>SD</option><option>TN</option><option>TX</option>
+                <option>UT</option><option>VT</option><option>VA</option><option>WA</option>
+                <option>WV</option><option>WI</option><option>WY</option>
+                <option>PR</option><option>GU</option><option>VI</option><option>AS</option><option>MP</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="row">
+            <label class="input" aria-label="ZIP code">
+              <span>ZIP</span>
+              <input id="zipInput" type="text" inputmode="numeric" maxlength="5" placeholder="20169" />
+            </label>
+            <div></div>
+          </div>
+
+          <!-- Removed date/time chips per request -->
+
+          <button class="btn-primary" id="checkBtn" type="button">Check for Local Taskers</button>
+          <!-- Removed tiny disclaimer per request -->
+        </div>
+
+        <!-- MAP CARD (below; swapped image for live map) -->
+        <div class="card map" style="margin-top:12px" aria-label="Nearby matches map">
+          <div id="map" role="img" aria-label="Map preview of area"></div>
+        </div>
+      </div>
+
+      <!-- Right: Matches list (unchanged) -->
+      <div class="card list" aria-label="Nearby taskers">
+        <div class="sort-bar">
+          <div class="sort">
+            <strong>Matches nearby</strong>
+            <span class="badge">Sorted by Proximity</span>
+          </div>
+          <div class="select" role="listbox" aria-label="Sort">
+            Proximity ▾
+          </div>
+        </div>
+
+        <!-- Profile card 1 -->
+        <article class="profile" aria-label="Tasker profile">
+          <div class="avatar" aria-hidden="true">
+            <!-- simple avatar svg -->
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="currentColor"></path>
+            </svg>
+          </div>
+          <div class="meta">
+            <h3>Jamie R. <span class="badge">104 Tasks Completed</span></h3>
+            <p>Leaf raking, bagging, and curbside placement. Own rakes & bags. Can start <strong>today</strong>.</p>
+          </div>
+          <div class="rate">$18/hr</div>
+        </article>
+
+        <!-- Profile card 2 -->
+        <article class="profile" aria-label="Tasker profile">
+          <div class="avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="currentColor"></path>
+            </svg>
+          </div>
+          <div class="meta">
+            <h3>Aiden K. <span class="badge">76 Tasks Completed</span></h3>
+            <p>Great with yardwork; can bring gloves and leaf blower. Afternoon and weekend availability.</p>
+          </div>
+          <div class="rate">$20/hr</div>
+        </article>
+
+        <!-- Profile card 3 -->
+        <article class="profile" aria-label="Tasker profile">
+          <div class="avatar" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <circle cx="12" cy="8" r="4"></circle>
+              <path d="M4 20c0-4 4-6 8-6s8 2 8 6" fill="currentColor"></path>
+            </svg>
+          </div>
+          <div class="meta">
+            <h3>Sophia L. <span class="badge">52 Tasks Completed</span></h3>
+            <p>Pet care and dog walking, yardwork, snowshoveling and more! Parent drop-off. Weekends best.</p>
+          </div>
+          <div class="rate">$17/hr</div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Mobile panel toggle (unchanged)
+    const burger=document.getElementById('navBurger');
+    const panel=document.getElementById('mobilePanel');
+    if(burger&&panel){
+      burger.addEventListener('click',()=>{
+        const open=panel.hasAttribute('hidden');
+        if(open) panel.removeAttribute('hidden'); else panel.setAttribute('hidden','');
+        burger.setAttribute('aria-expanded', String(open));
+      });
+    }
+
+    // Desktop dropdowns: also toggle on click (unchanged)
+    document.querySelectorAll('.has-submenu .nav-link').forEach(btn=>{
+      const menu=btn.parentElement.querySelector('.submenu');
+      btn.addEventListener('click',e=>{
+        const visible = menu && menu.style.display==='block';
+        document.querySelectorAll('.submenu').forEach(m=>m.style.display='none');
+        if(menu) menu.style.display = visible ? 'none' : 'block';
+        btn.setAttribute('aria-expanded', String(!visible));
+        e.stopPropagation();
+      });
+    });
+    document.addEventListener('click',()=>{
+      document.querySelectorAll('.submenu').forEach(m=>m.style.display='none');
+      document.querySelectorAll('.has-submenu .nav-link').forEach(b=>b.setAttribute('aria-expanded','false'));
+    });
+
+    // ===== Map + ZIP geocode behavior (NEW) =====
+    let map, geocoder, lastMarker;
+
+    function initMap(){
+      map = new google.maps.Map(document.getElementById('map'), {
+        center: { lat: 38.9072, lng: -77.0369 }, // default: DC area
+        zoom: 8,
+        mapTypeControl: false,
+        streetViewControl: false,
+      });
+      geocoder = new google.maps.Geocoder();
+    }
+
+    async function showZipOnMap(state, zip){
+      if(!geocoder) return;
+      const address = `${zip}, ${state}, USA`;
+      return new Promise((resolve,reject)=>{
+        geocoder.geocode({ address }, (results, status)=>{
+          if(status === 'OK' && results && results[0]){
+            const r = results[0];
+            // Fit to ZIP viewport if available, else center
+            if(r.geometry && r.geometry.viewport){
+              map.fitBounds(r.geometry.viewport);
+            } else if(r.geometry && r.geometry.location){
+              map.setCenter(r.geometry.location);
+              map.setZoom(13);
+            }
+            if(lastMarker) lastMarker.setMap(null);
+            lastMarker = new google.maps.Marker({
+              map,
+              position: r.geometry.location,
+              title: `${zip}`
+            });
+            resolve(true);
+          } else {
+            resolve(false);
+          }
+        });
+      });
+    }
+
+    const titleEl = document.getElementById('composerTitle');
+    const stateEl = document.getElementById('stateSelect');
+    const zipEl   = document.getElementById('zipInput');
+    const checkEl = document.getElementById('checkBtn');
+
+    function validZip(v){ return /^\d{5}$/.test(v); }
+
+    checkEl?.addEventListener('click', async ()=>{
+      const state = stateEl.value.trim();
+      const zip = zipEl.value.trim();
+
+      if(!state){ alert('Please choose a state.'); return; }
+      if(!validZip(zip)){ alert('Enter a valid 5-digit ZIP.'); return; }
+
+      // Update title per request
+      titleEl.innerHTML = `We’re sorry! Workish is piloting in specific zips in Northern Virginia. 
+        Check back again soon or <a href="/signup.html">sign-up for details</a>.`;
+
+      // Refresh map to the entered ZIP
+      await showZipOnMap(state, zip);
+    });
+  </script>
+  <!-- Google Maps API: replace YOUR_GOOGLE_MAPS_API_KEY -->
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"></script>
+</body>
+</html>
