@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Workish — Create Account</title>
+  <meta name="description" content="Create a Workish customer account to hire local, verified teen help." />
+  <style>
+    :root{ --forest:#003924; --ink:#0f2a1b; --sub:#224E3B; --cream:#F7F3EA; --off:#FAF8F2; --gold:#FFD66B; --line:rgba(0,0,0,.14);
+      --font:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans"; --shadow:0 10px 24px rgba(0,0,0,.10); }
+    *{box-sizing:border-box} body{margin:0;font-family:var(--font);color:var(--ink);background:var(--cream);-webkit-font-smoothing:antialiased}
+    body::before{content:"";position:fixed;inset:0;z-index:-2;background:url("/images/customer.PNG") center/cover no-repeat;filter:brightness(.96) saturate(1.02) blur(.3px)}
+    body::after{content:"";position:fixed;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,57,36,.30),rgba(0,57,36,.24) 280px,rgba(247,243,234,.18) 60%,rgba(247,243,234,.22) 100%)}
+    .site-header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--line)}
+    .nav-wrap{height:84px;display:flex;align-items:center;gap:18px;max-width:1100px;margin:0 auto;padding:0 16px}
+    .nav-brand{display:flex;align-items:center;text-decoration:none}
+    .nav-logo{max-height:86px;width:auto;display:block;object-fit:contain}
+    .nav-main{display:flex;align-items:center;gap:6px;margin-left:8px}.nav-item{position:relative}
+    .nav-link{background:transparent;border:none;cursor:pointer;padding:10px 12px;border-radius:10px;font-weight:700;color:#0e1f17}
+    .submenu{position:absolute;top:100%;left:0;min-width:220px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 28px rgba(0,0,0,.12);padding:8px;display:none}
+    .submenu a{display:block;padding:10px 12px;border-radius:8px;color:#224E3B;text-decoration:none;font-weight:600}
+    .submenu a:hover{background:var(--off)} @media(hover:hover){ .has-submenu:hover .submenu{display:block} }
+    .nav-burger{margin-left:auto;width:42px;height:42px;border-radius:10px;border:1px solid rgba(0,0,0,.12);background:#fff;display:none;align-items:center;justify-content:center;gap:4px;flex-direction:column;cursor:pointer}
+    .nav-burger span{width:20px;height:2px;background:#0e1f17;display:block}
+    .mobile-panel{border-top:1px solid var(--line);background:#fff;box-shadow:0 12px 28px rgba(0,0,0,.12)} .m-item{border-bottom:1px solid var(--line);padding:6px 8px}
+    .m-item summary{cursor:pointer;padding:12px 8px;font-weight:800}.m-item a{display:block;padding:10px 12px;text-decoration:none;color:#224E3B}
+    .m-item a:hover{background:var(--off);border-radius:8px} @media(max-width:900px){ .nav-main{display:none} .nav-burger{display:flex} }
+    .shell{max-width:1100px;margin:0 auto;padding:28px 16px 56px}
+    .hero{display:flex;flex-direction:column;gap:10px;margin-bottom:28px;color:#fff;text-shadow:0 3px 6px rgba(0,0,0,.40)}
+    .hero h1{margin:0;font-size:clamp(26px,4.6vw,40px);line-height:1.12;letter-spacing:-.02em;font-weight:900;color:#fff}
+    .card{background:#fff;border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+    .signup{padding:20px 18px 18px;max-width:560px}
+    .field{display:flex;flex-direction:column;gap:6px;margin-top:12px}
+    .field label{font-weight:800;color:#173627}
+    .control{display:flex;align-items:center;gap:8px;background:var(--off);border:1px solid var(--line);border-radius:12px;padding:12px 14px;color:#1b2d23}
+    .control input{border:none;outline:none;background:transparent;flex:1;font-size:15px;color:#1b2d23}
+    .cta{width:100%;height:52px;margin-top:14px;border:none;border-radius:14px;font-weight:900;font-size:18px;color:#fff;background:var(--forest);cursor:pointer;box-shadow:0 8px 20px rgba(0,0,0,.12)}
+    .tiny{font-size:.92rem;color:#375445;margin-top:8px}
+    .error,.success{margin-top:10px;padding:10px 12px;border-radius:10px;display:none}
+    .error{border:1px solid #e7c5c5;background:#fff3f3;color:#7a1e1e}
+    .success{border:1px solid #cde4d6;background:#f3fbf7;color:#134b33}
+  </style>
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="nav-wrap">
+      <a class="nav-brand" href="/index.html" aria-label="Workish Home">
+        <img src="/images/worklogo.PNG" alt="Workish" class="nav-logo">
+      </a>
+      <nav class="nav-main" aria-label="Primary">
+        <div class="nav-item has-submenu"></div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">Join Workish</button>
+          <div class="submenu">
+            <a href="/taskers.html">For Taskers & Parents</a>
+            <a href="/customers.html">For Customers</a>
+            <a href="/safety.html">Safety & Oversight</a>
+          </div>
+        </div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">Why Workish</button>
+          <div class="submenu">
+            <a href="/about.html#mission">Mission</a>
+            <a href="/about.html#trust">Trust & verification</a>
+            <a href="/about.html#faq">FAQ</a>
+          </div>
+        </div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">What’s new</button>
+          <div class="submenu">
+            <a href="/updates.html#pilot-news">Pilot updates</a>
+            <a href="/updates.html#roadmap">Roadmap</a>
+            <a href="/updates.html#changelog">Changelog</a>
+          </div>
+        </div>
+      </nav>
+      <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-controls="mobilePanel" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div id="mobilePanel" class="mobile-panel" hidden>
+      <details class="m-item"><summary>Join Workish</summary>
+        <a href="/taskers.html">For Taskers & Parents</a>
+        <a href="/customers.html">For Customers</a>
+        <a href="/safety.html">Safety & Oversight</a>
+      </details>
+      <details class="m-item"><summary>Why Workish</summary>
+        <a href="/about.html#mission">Mission</a>
+        <a href="/about.html#trust">Trust & Verification</a>
+        <a href="/about.html#faq">FAQ</a>
+      </details>
+      <details class="m-item"><summary>What’s new</summary>
+        <a href="/updates.html#pilot-news">Pilot updates</a>
+        <a href="/updates.html#roadmap">Roadmap</a>
+        <a href="/updates.html#changelog">Changelog</a>
+      </details>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero">
+      <h1>Create your account</h1>
+      <p>Sign up to book local, verified teen help.</p>
+    </section>
+
+    <section class="card signup" aria-label="Create account">
+      <form id="signupForm" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <div class="control"><input id="email" name="email" type="email" required placeholder="you@example.com"></div>
+        </div>
+        <div class="field">
+          <label for="password">Password (min 8 chars)</label>
+          <div class="control"><input id="password" name="password" type="password" required minlength="8" placeholder="••••••••"></div>
+        </div>
+        <div class="field">
+          <label for="dob">Date of Birth</label>
+          <div class="control"><input id="dob" name="dob" type="date" required></div>
+        </div>
+        <button class="cta" type="submit">Create Account</button>
+        <div id="err" class="error" role="alert"></div>
+        <div id="ok" class="success" role="status"></div>
+        <p class="tiny">By signing up, you agree to our <a href="/terms.html">Terms</a> and <a href="/privacy.html">Privacy Policy</a>.</p>
+        <p class="tiny">Already have an account? <a href="login.html">Sign in →</a></p>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    // Mobile panel toggle + submenu behavior (same as login page)
+    const burger=document.getElementById('navBurger');
+    const panel=document.getElementById('mobilePanel');
+    if(burger&&panel){
+      burger.addEventListener('click',()=>{
+        const open=panel.hasAttribute('hidden');
+        if(open) panel.removeAttribute('hidden'); else panel.setAttribute('hidden','');
+        burger.setAttribute('aria-expanded', String(open));
+      });
+    }
+    document.querySelectorAll('.has-submenu .nav-link').forEach(btn=>{
+      const menu=btn.parentElement.querySelector('.submenu');
+      btn.addEventListener('click',e=>{
+        const visible = menu && menu.style.display==='block';
+        document.querySelectorAll('.submenu').forEach(m=>m.style.display='none');
+        if(menu) menu.style.display = visible ? 'none' : 'block';
+        btn.setAttribute('aria-expanded', String(!visible));
+        e.stopPropagation();
+      });
+    });
+    document.addEventListener('click',()=>{
+      document.querySelectorAll('.submenu').forEach(m=>m.style.display='none');
+      document.querySelectorAll('.has-submenu .nav-link').forEach(b=>b.setAttribute('aria-expanded','false'));
+    });
+
+    // Minimal client-side validation (you'll wire backend later)
+    const form=document.getElementById('signupForm');
+    const err=document.getElementById('err');
+    const ok=document.getElementById('ok');
+    form.addEventListener('submit',(e)=>{
+      e.preventDefault();
+      err.style.display='none'; ok.style.display='none';
+      const email=document.getElementById('email').value.trim().toLowerCase();
+      const pw=document.getElementById('password').value;
+      const dob=document.getElementById('dob').value;
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ err.textContent='Enter a valid email.'; err.style.display='block'; return; }
+      if(pw.length<8){ err.textContent='Password must be at least 8 characters.'; err.style.display='block'; return; }
+      if(!dob){ err.textContent='Please enter your date of birth.'; err.style.display='block'; return; }
+      ok.textContent='Looks good. Wire this to POST /api/signup next.'; ok.style.display='block';
+    });
+  </script>
+</body>
+</html>
