@@ -1,0 +1,715 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Workish — Wallet</title>
+  <meta name="description" content="Workish Wallet: a gamified earnings & savings hub that teaches financial literacy by doing." />
+  <meta name="geo.region" content="US-VA">
+  <meta name="geo.placename" content="Northern Virginia">
+
+  <style>
+    :root{
+      /* Match your site variables exactly */
+      --forest:#003924;
+      --ink:#0f2a1b;
+      --sub:#224E3B;
+      --cream:#F7F3EA;
+      --off:#FAF8F2;
+      --gold:#FFD66B;
+      --line:rgba(0,0,0,.14);
+      --font:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans";
+      --r-sm:14px; --r-lg:24px;
+      --shadow:0 10px 24px rgba(0,0,0,.10);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family:var(--font); color:var(--ink); background:var(--cream);
+      -webkit-font-smoothing:antialiased;
+    }
+
+    /* Background image + soft overlay (kept consistent) */
+    body::before{
+      content:""; position:fixed; inset:0; z-index:-2;
+      background:url("/images/customer.PNG") center/cover no-repeat;
+      filter:brightness(.96) saturate(1.02) blur(.3px);
+    }
+    body::after{
+      content:""; position:fixed; inset:0; z-index:-1;
+      background:linear-gradient(180deg,
+        rgba(0,57,36,.30) 0px,
+        rgba(0,57,36,.24) 280px,
+        rgba(247,243,234,.18) 60%,
+        rgba(247,243,234,.22) 100%);
+      pointer-events:none;
+    }
+
+    /* ===== Header (identical shell) ===== */
+    .site-header{ position:sticky; top:0; z-index:50; background:#fff; border-bottom:1px solid var(--line); }
+    .nav-wrap{ height:84px; display:flex; align-items:center; gap:18px; max-width:1100px; margin:0 auto; padding:0 16px; }
+    .nav-brand{ display:flex; align-items:center; text-decoration:none; }
+    .nav-logo { max-height:86px; width:auto; display:block; object-fit:contain; }
+    .nav-main{ display:flex; align-items:center; gap:6px; margin-left:8px; }
+    .nav-item{ position:relative; }
+    .nav-link{ background:transparent; border:none; cursor:pointer; padding:10px 12px; border-radius:10px; font-weight:700; color:#0e1f17; }
+    .submenu{ position:absolute; top:100%; left:0; min-width:220px; background:#fff; border:1px solid var(--line); border-radius:12px; box-shadow:0 12px 28px rgba(0,0,0,.12); padding:8px; display:none; }
+    .submenu a{ display:block; padding:10px 12px; border-radius:8px; color:#224E3B; text-decoration:none; font-weight:600; }
+    .submenu a:hover{ background:var(--off); }
+    @media(hover:hover){ .has-submenu:hover .submenu{ display:block; } }
+    .nav-burger{ margin-left:auto; width:42px; height:42px; border-radius:10px; border:1px solid rgba(0,0,0,.12); background:#fff; display:none; align-items:center; justify-content:center; gap:4px; flex-direction:column; cursor:pointer; }
+    .nav-burger span{ width:20px; height:2px; background:#0e1f17; display:block; }
+    .mobile-panel{ border-top:1px solid var(--line); background:#fff; box-shadow:0 12px 28px rgba(0,0,0,.12); }
+    .m-item{ border-bottom:1px solid var(--line); padding:6px 8px; }
+    .m-item summary{ cursor:pointer; padding:12px 8px; font-weight:800; }
+    .m-item a{ display:block; padding:10px 12px; text-decoration:none; color:#224E3B; }
+    .m-item a:hover{ background:var(--off); border-radius:8px; }
+    @media(max-width:900px){ .nav-main{display:none;} .nav-burger{display:flex;} }
+
+    /* ===== Page shell ===== */
+    .shell{ max-width:1100px; margin:0 auto; padding:28px 16px 88px; }
+
+    .hero{
+      display:flex; flex-direction:column; gap:10px;
+      margin-bottom:32px;
+      color:#fff; text-shadow:0 3px 6px rgba(0,0,0,.40);
+    }
+    .hero h1{ margin:0; font-size:clamp(26px,4.6vw,42px); line-height:1.12; letter-spacing:-.02em; color:#fff; font-weight:900; }
+    .hero p{ margin:0; color:#ffffff; font-weight:600; font-size:1.05rem; }
+    .cta-row{ display:flex; gap:10px; flex-wrap:wrap; }
+    .apply{
+      display:inline-flex; align-items:center; justify-content:center; gap:10px;
+      padding:12px 22px; border-radius:999px; background:var(--forest); color:#fff;
+      font-weight:900; text-decoration:none; font-size:1.05rem;
+      border:2px solid #fff; box-shadow:0 0 8px rgba(255,255,255,.35), 0 8px 24px rgba(0,0,0,.25);
+      transition:transform .12s ease, filter .2s ease; margin-top:8px;
+    }
+    .apply:hover{ filter:brightness(1.08); transform:translateY(-2px); }
+
+    .grid{ display:grid; gap:18px; grid-template-columns: 1.1fr 1fr; }
+    @media(max-width:990px){ .grid{ grid-template-columns:1fr; } }
+
+    .card{ background:#fff; border:1px solid var(--line); border-radius:var(--r-lg); box-shadow:var(--shadow); padding:14px; }
+    .card h3{ margin:0 0 8px; font-size:1.08rem; }
+
+    /* Wallet Components — styled to match */
+    .balances{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:8px; }
+    @media(max-width:720px){ .balances{grid-template-columns:repeat(2,1fr);} }
+    .kpi{ background:linear-gradient(180deg,#fff,#f7fbf8); border:1px solid var(--line); border-radius:14px; padding:12px; }
+    .kpi .label{ font-size:.82rem; color:#4c5e55; }
+    .kpi .val{ font-weight:900; font-size:1.35rem; color:var(--forest); }
+    .kpi .sub{ font-size:.78rem; color:#6c7b75; }
+
+    .level{ display:flex; align-items:center; gap:10px; margin-top:12px; }
+    .level .barwrap{ flex:1; background:#ecf2ee; border-radius:999px; height:10px; overflow:hidden }
+    .level .bar{ height:100%; width:0; background:linear-gradient(90deg,var(--gold),#f0b500) }
+    .level .num{ font-weight:900; color:#7a5a00 }
+
+    .world{ display:grid; place-items:center; background:linear-gradient(180deg,#f8fff7,#f1fbf6); border:1px solid var(--line); border-radius:14px; padding:12px }
+    .world .caption{ font-size:.85rem; color:#4a5a53; margin-top:6px; text-align:center }
+
+    .goals{ display:grid; grid-template-columns:1fr; gap:10px }
+    @media(min-width:560px){ .goals{ grid-template-columns:1fr 1fr } }
+    .goal{ border:1px dashed rgba(0,0,0,.15); border-radius:14px; padding:12px; position:relative }
+    .goal .top{ display:flex; align-items:center; justify-content:space-between; gap:8px }
+    .goal .name{ font-weight:800 }
+    .progress{ height:10px; background:#eef3f0; border-radius:999px; overflow:hidden; margin-top:10px }
+    .bar{ height:100%; width:0; background:linear-gradient(90deg, var(--forest), #0f6b42) }
+    .goal .meta{ font-size:.8rem; color:#51635b; margin-top:6px; display:flex; justify-content:space-between }
+    .goal .act{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap }
+    .btn{ border:none; border-radius:999px; padding:10px 12px; font-weight:800; cursor:pointer }
+    .btn.primary{ background:var(--forest); color:#fff }
+    .btn.secondary{ background:#fff; border:1px solid var(--line) }
+    .btn.ghost{ background:transparent; border:1px dashed var(--line) }
+
+    .challenge{ border:1px solid var(--line); border-radius:12px; padding:10px; display:grid; gap:8px }
+    .challenge .row{ display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap }
+    .pill{ display:inline-flex; align-items:center; gap:6px; border-radius:999px; padding:6px 10px; background:#f2f7f4; border:1px solid var(--line); font-size:.82rem }
+    .streak{ font-weight:900; color:var(--forest) }
+
+    .feed{ display:grid; gap:8px }
+    .note{ border-left:4px solid var(--forest); background:#f7fbf8; border:1px solid var(--line); padding:10px; border-radius:8px }
+
+    .badges{ display:grid; grid-template-columns:repeat(4,1fr); gap:10px }
+    @media(max-width:700px){ .badges{ grid-template-columns:repeat(3,1fr) } }
+    .badge{ display:grid; place-items:center; border:1px solid var(--line); border-radius:12px; padding:12px; background:#fff; text-align:center }
+    .badge .icon{ font-size:26px }
+    .badge .label{ font-size:.82rem; margin-top:6px }
+    .badge.locked{ opacity:.5; filter:grayscale(1) }
+
+    /* Footer dock */
+    .dock{ position:fixed; left:0; right:0; bottom:0; background:#fff; border-top:1px solid var(--line); display:flex; gap:8px; flex-wrap:wrap; justify-content:center; padding:10px }
+    .dock .btn{ padding:10px 14px }
+
+    /* A11y helpers */
+    .sr-only{ position:absolute !important; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+  </style>
+</head>
+<body>
+
+  <!-- Header (logo + menus)—kept consistent -->
+  <header class="site-header" role="banner">
+    <div class="nav-wrap">
+      <a class="nav-brand" href="/index.html" aria-label="Workish Home">
+        <img src="/images/worklogo.PNG" alt="Workish" class="nav-logo">
+      </a>
+
+      <nav class="nav-main" aria-label="Primary">
+        <div class="nav-item has-submenu"></div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">Join Workish</button>
+          <div class="submenu">
+            <a href="/taskers.html">For Taskers & Parents</a>
+            <a href="/customers.html">For Customers</a>
+            <a href="/safety.html">Safety & Oversight</a>
+          </div>
+        </div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">Why Workish</button>
+          <div class="submenu">
+            <a href="/about.html#mission">Mission</a>
+            <a href="/about.html#trust">Trust & verification</a>
+            <a href="/about.html#faq">FAQ</a>
+          </div>
+        </div>
+        <div class="nav-item has-submenu">
+          <button class="nav-link" aria-haspopup="true" aria-expanded="false">What’s new</button>
+          <div class="submenu">
+            <a href="/updates.html#pilot-news">Pilot updates</a>
+            <a href="/updates.html#roadmap">Roadmap</a>
+            <a href="/updates.html#changelog">Changelog</a>
+          </div>
+        </div>
+      </nav>
+
+      <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-controls="mobilePanel" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div id="mobilePanel" class="mobile-panel" hidden>
+      <details class="m-item"><summary>Join Workish</summary>
+        <a href="/taskers.html">For Taskers & Parents</a>
+        <a href="/customers.html">For Customers</a>
+        <a href="/safety.html">Safety & Oversight</a>
+      </details>
+      <details class="m-item"><summary>Why Workish</summary>
+        <a href="/about.html#mission">Mission</a>
+        <a href="/about.html#trust">Trust & Verification</a>
+        <a href="/about.html#faq">FAQ</a>
+      </details>
+      <details class="m-item"><summary>What’s new</summary>
+        <a href="/updates.html#pilot-news">Pilot updates</a>
+        <a href="/updates.html#roadmap">Roadmap</a>
+        <a href="/updates.html#changelog">Changelog</a>
+      </details>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="shell">
+    <section class="hero" aria-label="Intro">
+      <h1>Workish Wallet</h1>
+      <p>Earn • Save • Grow — a gamified money hub for teens (and peace of mind for parents).</p>
+      <div class="cta-row">
+        <a class="apply" href="/login.html">Login / Create Account →</a>
+        <a class="apply" href="/taskers.html">Become a Tasker →</a>
+      </div>
+    </section>
+
+    <section class="grid" aria-label="Wallet dashboard">
+      <!-- Left: balances + goals + challenges -->
+      <div class="card">
+        <h3>Balances</h3>
+        <div class="balances" id="balances"></div>
+        <div class="level">
+          <div><strong>Level</strong> <span id="levelNum" class="num">1</span></div>
+          <div class="barwrap"><div id="levelBar" class="bar"></div></div>
+        </div>
+      </div>
+
+      <div class="card world">
+        <svg viewBox="0 0 260 120" width="100%" height="120" aria-hidden="true">
+          <defs>
+            <linearGradient id="leaf" x1="0" x2="0" y1="0" y2="1">
+              <stop offset="0" stop-color="#1e7a4b"/>
+              <stop offset="1" stop-color="#0f6b42"/>
+            </linearGradient>
+          </defs>
+        <!-- ground -->
+          <rect x="0" y="92" width="260" height="28" fill="#d9e9df" />
+          <!-- jar -->
+          <rect x="24" y="24" width="52" height="80" rx="10" fill="none" stroke="#8fb7a2" stroke-width="3"/>
+          <!-- coins -->
+          <g id="coins"></g>
+          <!-- plant -->
+          <g id="plant" transform="translate(160,96)">
+            <rect x="-2" y="-8" width="4" height="8" fill="#7a5a00"/>
+            <path id="stem" d="M0 0 C 0 -10, 0 -30, 0 -40" stroke="url(#leaf)" stroke-width="3" fill="none" stroke-linecap="round"/>
+            <ellipse id="leafL" cx="-6" cy="-20" rx="8" ry="4" fill="url(#leaf)" />
+            <ellipse id="leafR" cx="6" cy="-28" rx="8" ry="4" fill="url(#leaf)" />
+          </g>
+        </svg>
+        <div class="caption">Your world grows as you earn, save, and give 🌱</div>
+      </div>
+
+      <div class="card">
+        <h3>Savings Goals</h3>
+        <div class="goals" id="goals"></div>
+        <button class="btn ghost" id="addGoal" style="margin-top:10px">+ Add goal</button>
+      </div>
+
+      <div class="card">
+        <h3>Challenges & Streaks</h3>
+        <div class="challenge">
+          <div class="row">
+            <div><strong>Weekly Saver</strong> — save at least <em>$10</em> this week</div>
+            <span class="pill">Streak: <span class="streak" id="streakNum">0</span> weeks</span>
+          </div>
+          <div class="row">
+            <div class="note" id="streakStatus">No activity yet</div>
+            <button class="btn primary" id="logWeeklySave">$10 Quick-Save</button>
+          </div>
+        </div>
+        <div class="challenge" style="margin-top:10px">
+          <div class="row">
+            <div><strong>Give-Back</strong> — donate <em>5%</em> of a payout</div>
+            <span class="pill" id="donateBadge">Locked</span>
+          </div>
+          <div class="row">
+            <div class="note">Choose an amount to donate from the dock actions.</div>
+            <button class="btn secondary" id="openDonate">Donate…</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Earnings Insights</h3>
+        <div class="feed" id="feed"></div>
+      </div>
+
+      <div class="card">
+        <h3>Badges</h3>
+        <div class="badges" id="badges"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Modals -->
+  <dialog id="goalModal">
+    <form method="dialog" class="card" style="padding:14px; max-width:520px">
+      <h3>New Goal</h3>
+      <label class="sr-only" for="goalName">Goal name</label>
+      <input id="goalName" name="goalName" placeholder="e.g., New guitar" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);margin-bottom:8px" required />
+      <div style="display:flex;gap:8px">
+        <div style="flex:1">
+          <label class="sr-only" for="goalTarget">Target amount</label>
+          <input id="goalTarget" name="goalTarget" type="number" min="1" step="1" placeholder="Target $" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--line)" required />
+        </div>
+        <div style="flex:1">
+          <label class="sr-only" for="goalSeed">Seed from balance</label>
+          <input id="goalSeed" name="goalSeed" type="number" min="0" step="1" placeholder="Seed $" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--line)" />
+        </div>
+      </div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+        <button class="btn secondary" value="cancel" type="submit">Cancel</button>
+        <button class="btn primary" value="ok" type="submit">Create</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="donateModal">
+    <form method="dialog" class="card" style="padding:14px; max-width:520px">
+      <h3>Donate from Available Balance</h3>
+      <div class="note">Pick an amount. For demo purposes, this only affects badges/insights.</div>
+      <input id="donateAmt" type="number" min="1" step="1" value="5" style="width:100%;padding:10px;border-radius:12px;border:1px solid var(--line);margin-top:8px"/>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+        <button class="btn secondary" value="cancel" type="submit">Cancel</button>
+        <button class="btn primary" value="ok" type="submit">Donate</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Action Dock (simulate jobs/payouts/saving) -->
+  <div class="dock">
+    <button class="btn secondary" id="simulateJob">$60 — Complete Job</button>
+    <button class="btn secondary" id="payout">$50 — Payout to Wallet</button>
+    <button class="btn secondary" id="save20">Save $20 → Top Goal</button>
+    <button class="btn secondary" id="spend15">Spend $15</button>
+    <button class="btn primary" id="quickTip">+ Tip $5</button>
+  </div>
+
+  <script>
+    // ===== Mobile panel toggle (same shell behavior) =====
+    const burger=document.getElementById('navBurger');
+    const panel=document.getElementById('mobilePanel');
+    if(burger&&panel){
+      burger.addEventListener('click',()=>{
+        const open=panel.hasAttribute('hidden');
+        if(open) panel.removeAttribute('hidden'); else panel.setAttribute('hidden','');
+        burger.setAttribute('aria-expanded', String(open));
+      });
+    }
+    document.querySelectorAll('.has-submenu .nav-link').forEach(btn=>{
+      const menu=btn.parentElement.querySelector('.submenu');
+      btn.addEventListener('click',e=>{
+        const visible = menu && menu.style.display==='block';
+        document.querySelectorAll('.submenu').forEach(m=>m.style.display='none');
+        if(menu) menu.style.display = visible ? 'none' : 'block';
+        btn.setAttribute('aria-expanded', String(!visible));
+        e.stopPropagation();
+      });
+    });
+    document.addEventListener('click',()=>{
+      document.querySelectorAll('.submenu').forEach(m=>m.style.display='none');
+      document.querySelectorAll('.has-submenu .nav-link').forEach(b=>b.setAttribute('aria-expanded','false'));
+    });
+
+    // ===== Wallet State & Helpers =====
+    const defaultState = {
+      balanceAvailable: 0,
+      pendingPayouts: 0,
+      totalEarned: 0,
+      savedTotal: 0,
+      donatedTotal: 0,
+      goals: [
+        { id: 'g1', name: 'AirPods', target: 150, saved: 40 },
+        { id: 'g2', name: 'Bike Fund', target: 300, saved: 90 }
+      ],
+      badges: {
+        firstJob: false,
+        hundredSaved: false,
+        tenJobs: false,
+        communityHero: false,
+        goalCrusher: false
+      },
+      jobsCompleted: 0,
+      levelXP: 0,      // 0-100 per level for demo
+      level: 1,
+      weeklyStreak: 0,
+      lastStreakWeek: null,
+      feed: [
+        { t: Date.now(), msg: 'Welcome! Finish a job and start your streak.' }
+      ]
+    };
+
+    function loadState(){
+      const raw = localStorage.getItem('workish_wallet_demo_v2');
+      if(!raw) return { ...defaultState };
+      try { return JSON.parse(raw); } catch { return { ...defaultState }; }
+    }
+    function saveState(){ localStorage.setItem('workish_wallet_demo_v2', JSON.stringify(state)); }
+    function addFeed(msg){ state.feed.unshift({ t: Date.now(), msg }); if(state.feed.length>25) state.feed.pop(); }
+    function fmt(n){ return '$' + n.toFixed(0); }
+    function weekOf(ts){ const d=new Date(ts); const first=new Date(d.getFullYear(),0,1); return Math.floor((d-first)/(1000*60*60*24*7)); }
+
+    // ===== Rendering =====
+    function renderBalances(){
+      const balances = document.getElementById('balances');
+      balances.innerHTML = '';
+      const items = [
+        { label: 'Available', val: state.balanceAvailable, sub: 'Spendable' },
+        { label: 'Pending', val: state.pendingPayouts, sub: 'Payouts due' },
+        { label: 'Saved', val: state.savedTotal, sub: 'Across goals' },
+        { label: 'Total Earned', val: state.totalEarned, sub: 'All time' },
+      ];
+      items.forEach(it => {
+        const el = document.createElement('div');
+        el.className = 'kpi';
+        el.innerHTML = `
+          <div class="label">${it.label}</div>
+          <div class="val">${fmt(it.val)}</div>
+          <div class="sub">${it.sub}</div>
+        `;
+        balances.appendChild(el);
+      });
+      document.getElementById('levelNum').textContent = state.level;
+      document.getElementById('levelBar').style.width = Math.min(100, state.levelXP) + '%';
+
+      // Jar coins reflect savings ratio
+      const ratio = state.savedTotal > 0 ? Math.min(1, state.savedTotal / Math.max(1, state.totalEarned)) : 0;
+      const coins = document.getElementById('coins');
+      coins.innerHTML = '';
+      const h = 70 * ratio;
+      for(let y=80; y>80-h; y-=6){
+        const r = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        r.setAttribute('cx', '50');
+        r.setAttribute('cy', String(y));
+        r.setAttribute('r', '3');
+        r.setAttribute('fill', '#f3c85c');
+        coins.appendChild(r);
+      }
+      // Plant grows with level
+      const stem = document.getElementById('stem');
+      const leafL = document.getElementById('leafL');
+      const leafR = document.getElementById('leafR');
+      const len = Math.min(60, 30 + (state.level-1)*6);
+      stem.setAttribute('d', `M0 0 C 0 -10, 0 -${len-10}, 0 -${len}`);
+      leafL.setAttribute('cy', String(-Math.min(20, len/2)));
+      leafR.setAttribute('cy', String(-Math.min(28, len*0.7)));
+    }
+
+    function renderGoals(){
+      const wrap = document.getElementById('goals');
+      wrap.innerHTML = '';
+      if(state.goals.length === 0){
+        const empty = document.createElement('div');
+        empty.className = 'note';
+        empty.textContent = 'No goals yet. Add your first goal to start saving!';
+        wrap.appendChild(empty);
+      }
+      state.goals.forEach(g => {
+        const pct = Math.min(100, (g.saved / g.target) * 100);
+        const el = document.createElement('div');
+        el.className = 'goal';
+        el.innerHTML = `
+          <div class="top">
+            <div class="name">${g.name}</div>
+            <div class="note">${fmt(g.saved)} / ${fmt(g.target)}</div>
+          </div>
+          <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
+          <div class="meta"><span>${pct.toFixed(0)}% funded</span><span>Goal ID: ${g.id}</span></div>
+          <div class="act">
+            <button class="btn secondary" data-act="add" data-id="${g.id}">+ Save $10</button>
+            <button class="btn secondary" data-act="save20" data-id="${g.id}">+ Save $20</button>
+            <button class="btn ghost" data-act="edit" data-id="${g.id}">Edit</button>
+            <button class="btn ghost" data-act="delete" data-id="${g.id}">Delete</button>
+          </div>
+        `;
+        el.querySelectorAll('button').forEach(b=> b.addEventListener('click', onGoalAction));
+        wrap.appendChild(el);
+      });
+    }
+
+    function renderBadges(){
+      const all = [
+        { key:'firstJob', label:'First Job', icon:'💼' },
+        { key:'hundredSaved', label:'$100 Saved', icon:'🏦' },
+        { key:'tenJobs', label:'10 Jobs', icon:'🔟' },
+        { key:'communityHero', label:'Community Hero', icon:'🤝' },
+        { key:'goalCrusher', label:'Goal Crusher', icon:'🎯' },
+      ];
+      const wrap = document.getElementById('badges');
+      wrap.innerHTML = '';
+      all.forEach(b=>{
+        const el = document.createElement('div');
+        el.className = 'badge' + (state.badges[b.key] ? '' : ' locked');
+        el.innerHTML = `<div class="icon">${b.icon}</div><div class="label">${b.label}</div>`;
+        wrap.appendChild(el);
+      });
+    }
+
+    function renderFeed(){
+      const wrap = document.getElementById('feed');
+      wrap.innerHTML = '';
+      state.feed.forEach(item=>{
+        const el = document.createElement('div');
+        el.className = 'note';
+        const d = new Date(item.t);
+        el.textContent = `[${d.toLocaleString()}] ${item.msg}`;
+        wrap.appendChild(el);
+      });
+    }
+
+    function renderStreak(){
+      document.getElementById('streakNum').textContent = state.weeklyStreak;
+      const wk = weekOf(Date.now());
+      const status = (state.lastStreakWeek === wk) ? 'Great! You saved this week.' :
+                     (state.lastStreakWeek === wk-1) ? 'Keep it up — save once this week to continue your streak.' :
+                     'No activity yet';
+      document.getElementById('streakStatus').textContent = status;
+      const donateBadge = document.getElementById('donateBadge');
+      donateBadge.textContent = state.badges.communityHero ? 'Unlocked' : 'Locked';
+    }
+
+    function renderAll(){
+      renderBalances();
+      renderGoals();
+      renderBadges();
+      renderFeed();
+      renderStreak();
+      saveState();
+    }
+
+    // Level / XP
+    function addXP(x){
+      state.levelXP += x;
+      while(state.levelXP >= 100){
+        state.levelXP -= 100;
+        state.level++;
+        addFeed('Level up! You are now Level ' + state.level + ' 🎉');
+      }
+    }
+
+    // Goal actions
+    function onGoalAction(e){
+      const id = e.currentTarget.getAttribute('data-id');
+      const act = e.currentTarget.getAttribute('data-act');
+      const g = state.goals.find(x=>x.id===id);
+      if(!g) return;
+      if(act === 'delete'){
+        if(confirm('Delete goal "'+g.name+'"?')){
+          state.goals = state.goals.filter(x=>x.id!==id);
+          renderAll();
+        }
+        return;
+      }
+      if(act === 'edit'){
+        const newName = prompt('Rename goal:', g.name) ?? g.name;
+        const newTarget = Number(prompt('New target $:', g.target) ?? g.target);
+        if(newTarget>0){
+          g.name = newName;
+          g.target = newTarget;
+          if(g.saved > g.target) g.saved = g.target;
+          renderAll();
+        }
+        return;
+      }
+      if(act === 'add' || act === 'save20'){
+        const amt = (act==='add') ? 10 : 20;
+        if(state.balanceAvailable < amt){ alert('Not enough available balance.'); return; }
+        state.balanceAvailable -= amt;
+        g.saved += amt;
+        state.savedTotal += amt;
+        addXP(10);
+        addFeed('Saved '+fmt(amt)+' toward "'+g.name+'".');
+        if(!state.badges.hundredSaved && state.savedTotal >= 100){
+          state.badges.hundredSaved = true;
+          addFeed('Badge unlocked: $100 Saved 🏦');
+        }
+        if(g.saved >= g.target && !state.badges.goalCrusher){
+          state.badges.goalCrusher = true;
+          addFeed('Goal "'+g.name+'" completed! Badge unlocked: Goal Crusher 🎯');
+        }
+        renderAll();
+      }
+    }
+
+    // Modals
+    const goalModal = document.getElementById('goalModal');
+    document.getElementById('addGoal').addEventListener('click', ()=>{
+      document.getElementById('goalName').value='';
+      document.getElementById('goalTarget').value='';
+      document.getElementById('goalSeed').value='';
+      goalModal.showModal();
+    });
+    goalModal.addEventListener('close', ()=>{
+      if(goalModal.returnValue !== 'ok') return;
+      const name = document.getElementById('goalName').value.trim();
+      const target = Number(document.getElementById('goalTarget').value||0);
+      const seed = Number(document.getElementById('goalSeed').value||0);
+      if(!name || target<=0){ return; }
+      const id = 'g'+Math.random().toString(36).slice(2,7);
+      const seedAmt = Math.min(seed, state.balanceAvailable);
+      state.balanceAvailable -= seedAmt;
+      state.savedTotal += seedAmt;
+      state.goals.push({ id, name, target, saved: seedAmt });
+      addFeed('New goal added: "'+name+'" with target '+fmt(target)+'.');
+      addXP(10);
+      renderAll();
+    });
+
+    const donateModal = document.getElementById('donateModal');
+    document.getElementById('openDonate').addEventListener('click', ()=>{
+      document.getElementById('donateAmt').value = Math.min(5, state.balanceAvailable);
+      donateModal.showModal();
+    });
+    donateModal.addEventListener('close', ()=>{
+      if(donateModal.returnValue !== 'ok') return;
+      const amt = Number(document.getElementById('donateAmt').value||0);
+      if(amt<=0 || amt>state.balanceAvailable){ return; }
+      state.balanceAvailable -= amt;
+      state.donatedTotal += amt;
+      addXP(10);
+      addFeed('You donated '+fmt(amt)+' to a local cause. Thank you! 🤝');
+      state.badges.communityHero = true;
+      renderAll();
+    });
+
+    // Dock actions
+    document.getElementById('simulateJob').addEventListener('click', ()=>{
+      state.pendingPayouts += 60;
+      state.totalEarned += 60;
+      state.jobsCompleted += 1;
+      addXP(15);
+      addFeed('Job completed: +$60 pending.');
+      if(!state.badges.firstJob && state.jobsCompleted >= 1){
+        state.badges.firstJob = true;
+        addFeed('Badge unlocked: First Job 💼');
+      }
+      if(!state.badges.tenJobs && state.jobsCompleted >= 10){
+        state.badges.tenJobs = true;
+        addFeed('Badge unlocked: 10 Jobs 🔟');
+      }
+      renderAll();
+    });
+
+    document.getElementById('payout').addEventListener('click', ()=>{
+      const amt = Math.min(50, state.pendingPayouts);
+      if(amt<=0){ alert('No pending payouts.'); return; }
+      state.pendingPayouts -= amt;
+      state.balanceAvailable += amt;
+      addXP(8);
+      addFeed('Paid out '+fmt(amt)+' to Available.');
+      renderAll();
+    });
+
+    document.getElementById('save20').addEventListener('click', ()=>{
+      if(state.goals.length===0){ alert('Add a goal first.'); return; }
+      const g = state.goals[0];
+      if(state.balanceAvailable < 20){ alert('Not enough available balance.'); return; }
+      state.balanceAvailable -= 20;
+      g.saved += 20;
+      state.savedTotal += 20;
+      addXP(10);
+      addFeed('Saved $20 to "'+g.name+'".');
+      if(!state.badges.hundredSaved && state.savedTotal >= 100){
+        state.badges.hundredSaved = true;
+        addFeed('Badge unlocked: $100 Saved 🏦');
+      }
+      if(g.saved >= g.target && !state.badges.goalCrusher){
+        state.badges.goalCrusher = true;
+        addFeed('Goal "'+g.name+'" completed! Badge unlocked: Goal Crusher 🎯');
+      }
+      renderAll();
+    });
+
+    document.getElementById('spend15').addEventListener('click', ()=>{
+      if(state.balanceAvailable < 15){ alert('Not enough available balance.'); return; }
+      state.balanceAvailable -= 15;
+      addFeed('Spent $15 from Available.');
+      renderAll();
+    });
+
+    document.getElementById('quickTip').addEventListener('click', ()=>{
+      state.pendingPayouts += 5;
+      state.totalEarned += 5;
+      addXP(4);
+      addFeed('Customer tip: +$5 pending. 🎉');
+      renderAll();
+    });
+
+    document.getElementById('logWeeklySave').addEventListener('click', ()=>{
+      const wk = weekOf(Date.now());
+      if(state.lastStreakWeek === wk){ addFeed('You already logged a save this week.'); renderAll(); return; }
+      if(state.balanceAvailable < 10){ alert('Need $10 available to log save.'); return; }
+      state.balanceAvailable -= 10;
+      state.savedTotal += 10;
+      if(state.goals[0]) state.goals[0].saved += 10;
+      if(state.lastStreakWeek === wk-1){ state.weeklyStreak += 1; } 
+      else { state.weeklyStreak = 1; }
+      state.lastStreakWeek = wk;
+      addXP(10);
+      addFeed('Weekly Saver logged: +$10 saved. Streak is now '+state.weeklyStreak+' week(s).');
+      if(!state.badges.hundredSaved && state.savedTotal >= 100){
+        state.badges.hundredSaved = true;
+        addFeed('Badge unlocked: $100 Saved 🏦');
+      }
+      renderAll();
+    });
+
+    // Init
+    let state = loadState();
+    renderAll();
+  </script>
+</body>
+</html>
