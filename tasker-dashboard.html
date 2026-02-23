@@ -228,7 +228,7 @@
       border-radius:14px; padding:12px 14px;
       display:flex; align-items:center; gap:10px;
     }
-    .control input{
+    .control input, .control select{
       border:none; outline:none; background:transparent; width:100%;
       font-size:15px; color:#1b2d23; font-weight:700;
       min-width:0;
@@ -247,18 +247,52 @@
     .error{ border:1px solid #e7c5c5; background:#fff3f3; color:#7a1e1e; }
     .ok{ border:1px solid #cde4d6; background:#f3fbf7; color:#134b33; }
 
-    /* Map */
-    .map-card{ padding:16px; }
-    #map{
-      width:100%;
-      height:360px;
-      display:block;
-      border-radius:18px;
-      border:1px solid var(--line);
-      background:#f6f8f7;
+    /* NEW: Task list panel (replaces map) */
+    .tasks-card .toolbar{
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:8px;
     }
-    @media(max-width:990px){
-      #map{ height:300px; }
+    .tasks-card .scope{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .scope .mini{
+      border:1px solid var(--line);
+      background:#fff;
+      border-radius:999px;
+      padding:8px 10px;
+      font-weight:900;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .scope .mini.active{
+      background:var(--forest);
+      color:#fff;
+      border-color:transparent;
+    }
+    .scope .inline{
+      min-width:180px;
+    }
+    .expand-panel{
+      margin-top:12px;
+      border:1px dashed rgba(0,0,0,.20);
+      background:#fafcfb;
+      border-radius:16px;
+      padding:12px;
+      display:none;
+    }
+    .expand-panel .row{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:8px;
     }
 
     /* Footer dock */
@@ -320,7 +354,7 @@
     <!-- ===== JOBS VIEW ===== -->
     <section id="viewJobs">
       <div class="grid">
-        <!-- Left: Jobs + Badges -->
+        <!-- Left: Badges + summary (kept, but jobs list is now on the right where the map used to be) -->
         <div class="card">
           <div style="display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:center;">
             <div>
@@ -343,23 +377,73 @@
 
           <hr style="border:none; border-top:1px solid var(--line); margin:14px 0;">
 
+          <div class="muted">
+            Open tasks appear on the right. If nothing is in your ZIP, you can expand to your state.
+          </div>
+
+          <div id="jobsErrLeft" class="error"></div>
+          <div id="jobsOkLeft" class="ok"></div>
+        </div>
+
+        <!-- Right: Available tasks (replaces Google Map) -->
+        <div class="card tasks-card" aria-label="Available tasks in your area">
+          <div class="toolbar">
+            <h2 style="margin:0;">Available tasks</h2>
+            <div class="scope" aria-label="Search scope">
+              <button class="mini active" id="scopeZipBtn" type="button">My ZIP</button>
+              <button class="mini" id="scopeStateBtn" type="button">My State</button>
+            </div>
+          </div>
+
+          <div class="muted" id="scopeHint" style="margin-top:2px;">
+            Showing open tasks in your ZIP.
+          </div>
+
+          <!-- Jobs list -->
           <div id="jobsWrap" class="jobs"></div>
 
+          <!-- Empty state + expand options -->
           <div id="jobsEmpty" class="muted" style="display:none; margin-top:12px;">
             No open jobs found in your ZIP yet. Check back soon.
           </div>
 
+          <div id="expandPanel" class="expand-panel" aria-label="Expand search area">
+            <div style="font-weight:900;">Want to broaden your search?</div>
+            <div class="muted" style="margin-top:4px;">
+              If you expand to <strong>My State</strong>, you’ll see open tasks anywhere in that state.
+            </div>
+
+            <div class="row">
+              <div class="control inline" style="flex:1; min-width:220px;">
+                <select id="stateSelect" aria-label="Select your state">
+                  <option value="">Select state (needed for state search)</option>
+                  <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
+                  <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
+                  <option>DC</option><option>FL</option><option>GA</option><option>HI</option>
+                  <option>ID</option><option>IL</option><option>IN</option><option>IA</option>
+                  <option>KS</option><option>KY</option><option>LA</option><option>ME</option>
+                  <option>MD</option><option>MA</option><option>MI</option><option>MN</option>
+                  <option>MS</option><option>MO</option><option>MT</option><option>NE</option>
+                  <option>NV</option><option>NH</option><option>NJ</option><option>NM</option>
+                  <option>NY</option><option>NC</option><option>ND</option><option>OH</option>
+                  <option>OK</option><option>OR</option><option>PA</option><option>RI</option>
+                  <option>SC</option><option>SD</option><option>TN</option><option>TX</option>
+                  <option>UT</option><option>VT</option><option>VA</option><option>WA</option>
+                  <option>WV</option><option>WI</option><option>WY</option>
+                  <option>PR</option><option>GU</option><option>VI</option><option>AS</option><option>MP</option>
+                </select>
+              </div>
+              <button class="btn primary" id="applyStateBtn" type="button">Expand to My State</button>
+              <button class="btn" id="backToZipBtn" type="button">Back to ZIP</button>
+            </div>
+
+            <div class="muted" style="margin-top:8px; font-size:.92rem;">
+              Tip: Set your state once in <strong>Profile</strong> to avoid picking it here again.
+            </div>
+          </div>
+
           <div id="jobsErr" class="error"></div>
           <div id="jobsOk" class="ok"></div>
-        </div>
-
-        <!-- Right: Map -->
-        <div class="card map-card" aria-label="Nearby jobs map">
-          <h2 style="margin:0 0 10px;">Map</h2>
-          <div id="map" role="img" aria-label="Map preview of area"></div>
-          <div class="muted" style="margin-top:10px;">
-            Map centers on your Profile ZIP (or your browser location if ZIP isn't set yet).
-          </div>
         </div>
       </div>
     </section>
@@ -400,6 +484,33 @@
           </div>
         </div>
 
+        <!-- NEW (minimal): optional State so "expand to state" works cleanly -->
+        <div class="form-row">
+          <div>
+            <label>State (optional, recommended)</label>
+            <div class="control">
+              <select id="profState">
+                <option value="">Select</option>
+                <option>AL</option><option>AK</option><option>AZ</option><option>AR</option>
+                <option>CA</option><option>CO</option><option>CT</option><option>DE</option>
+                <option>DC</option><option>FL</option><option>GA</option><option>HI</option>
+                <option>ID</option><option>IL</option><option>IN</option><option>IA</option>
+                <option>KS</option><option>KY</option><option>LA</option><option>ME</option>
+                <option>MD</option><option>MA</option><option>MI</option><option>MN</option>
+                <option>MS</option><option>MO</option><option>MT</option><option>NE</option>
+                <option>NV</option><option>NH</option><option>NK</option><option>NJ</option><option>NM</option>
+                <option>NY</option><option>NC</option><option>ND</option><option>OH</option>
+                <option>OK</option><option>OR</option><option>PA</option><option>RI</option>
+                <option>SC</option><option>SD</option><option>TN</option><option>TX</option>
+                <option>UT</option><option>VT</option><option>VA</option><option>WA</option>
+                <option>WV</option><option>WI</option><option>WY</option>
+                <option>PR</option><option>GU</option><option>VI</option><option>AS</option><option>MP</option>
+              </select>
+            </div>
+          </div>
+          <div></div>
+        </div>
+
         <label style="margin-top:10px;">Interests (comma-separated)</label>
         <div class="control"><input id="profInterests" placeholder="Dog walking, Yardwork, Tutoring..." /></div>
 
@@ -414,7 +525,7 @@
         <hr style="border:none; border-top:1px solid var(--line); margin:16px 0;">
 
         <div class="muted">
-          <strong>Note:</strong> For MVP, jobs are matched by exact ZIP. “Nearby ZIP” matching comes next (ZIP-to-lat/long table or a lightweight geo index).
+          <strong>Note:</strong> For MVP, ZIP matching is exact. “State” matching is a broader browse mode.
         </div>
       </div>
     </section>
@@ -490,9 +601,12 @@
     const refreshJobsBtn = document.getElementById("refreshJobsBtn");
     const jobsErr = document.getElementById("jobsErr");
     const jobsOk = document.getElementById("jobsOk");
+    const jobsErrLeft = document.getElementById("jobsErrLeft");
+    const jobsOkLeft = document.getElementById("jobsOkLeft");
 
     const profEmail = document.getElementById("profEmail");
     const profZip = document.getElementById("profZip");
+    const profState = document.getElementById("profState");
     const profInterests = document.getElementById("profInterests");
     const saveProfileBtn = document.getElementById("saveProfileBtn");
     const reloadProfileBtn = document.getElementById("reloadProfileBtn");
@@ -510,11 +624,28 @@
     // Badges UI (Jobs tab only)
     const badges1 = document.getElementById("badges");
 
+    // New scope UI (Jobs tab right card)
+    const scopeZipBtn = document.getElementById("scopeZipBtn");
+    const scopeStateBtn = document.getElementById("scopeStateBtn");
+    const scopeHint = document.getElementById("scopeHint");
+    const expandPanel = document.getElementById("expandPanel");
+    const stateSelect = document.getElementById("stateSelect");
+    const applyStateBtn = document.getElementById("applyStateBtn");
+    const backToZipBtn = document.getElementById("backToZipBtn");
+
     function show(el, msg){ el.textContent = msg; el.style.display = "block"; }
     function hide(el){ el.style.display="none"; }
     function money(n){
       const v = Number(n || 0);
       return "$" + v.toLocaleString(undefined,{maximumFractionDigits:0});
+    }
+    function setScopeButtons(active){
+      scopeZipBtn.classList.toggle("active", active === "zip");
+      scopeStateBtn.classList.toggle("active", active === "state");
+      scopeHint.textContent =
+        active === "zip"
+          ? "Showing open tasks in your ZIP."
+          : "Showing open tasks in your state.";
     }
 
     function setActiveTab(which){
@@ -530,15 +661,6 @@
       tabJobs.setAttribute("aria-selected", String(which==="jobs"));
       tabWallet.setAttribute("aria-selected", String(which==="wallet"));
       tabProfile.setAttribute("aria-selected", String(which==="profile"));
-
-      // maps needs resize when shown
-      if(which === "jobs"){
-        setTimeout(()=>{
-          if(window.__workishMap && window.google){
-            google.maps.event.trigger(window.__workishMap, "resize");
-          }
-        }, 60);
-      }
     }
 
     tabJobs.addEventListener("click", ()=>setActiveTab("jobs"));
@@ -551,6 +673,9 @@
     // ===================== State =====================
     let currentUser = null;
     let taskerProfile = null;
+
+    // search scope: zip | state
+    let searchScope = "zip";
 
     const defaultWallet = () => ({
       balanceAvailable: 0,
@@ -685,6 +810,7 @@
           role: "teenTasker",
           createdAt: serverTimestamp(),
           zip: null,
+          state: null,          // NEW (optional)
           interests: [],
           wallet: defaultWallet(),
           visibilityScore: 50
@@ -701,75 +827,35 @@
     }
 
     // ===================== Jobs =====================
-    async function loadJobs(){
-      hide(jobsErr); hide(jobsOk);
-      jobsWrap.innerHTML = "";
-      jobsEmpty.style.display = "none";
+    function safeStr(v){ return (v === null || v === undefined) ? "" : String(v); }
 
-      if(!currentUser) {
-        jobsEmpty.style.display = "";
-        jobsEmpty.textContent = "Sign in to see jobs.";
-        return;
-      }
-      if(!taskerProfile) return;
-
-      const zip = (taskerProfile.zip || "").trim();
-      zipLine.textContent = "ZIP: " + (zip || "— (set your ZIP in Profile)");
-
-      if(!zip){
-        jobsEmpty.style.display = "";
-        jobsEmpty.textContent = "Set your ZIP in Profile to see nearby jobs.";
-        return;
-      }
-
-      try{
-        let taskDocs = [];
-
-        // ✅ FIX: Match customer schema: tasks target ZIPs via `zips: [ ... ]`
-        // For MVP, avoid orderBy() to dodge composite index requirements.
-        const qOpenByZipArray = query(
-          collection(db, "tasks"),
-          where("zips", "array-contains", zip),
-          where("status", "==", "open"),
-          limit(25)
-        );
-
-        const snaps = await getDocs(qOpenByZipArray);
-        snaps.forEach(s=>taskDocs.push({ id:s.id, ...s.data() }));
-
-        // Optional: sort client-side (no index needed)
-        taskDocs.sort((a,b)=>{
-          const at = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
-          const bt = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
-          return bt - at;
-        });
-
-        if(taskDocs.length === 0){
-          jobsEmpty.style.display = "";
-          jobsEmpty.textContent = "No open jobs found in your ZIP yet. Check back soon.";
-          return;
-        }
-
-        taskDocs.forEach(t => renderJobCard(t));
-      }catch(e){
-        show(jobsErr, e?.message || String(e));
-      }
+    function normalizeState(s){
+      const v = safeStr(s).trim().toUpperCase();
+      return /^[A-Z]{2}$/.test(v) ? v : "";
     }
 
-    function safeStr(v){ return (v === null || v === undefined) ? "" : String(v); }
+    function readTaskState(t){
+      // Support a few possible field names (so you don’t have to refactor tasks immediately)
+      return normalizeState(t.state || t.homeState || t.taskState || "");
+    }
+
+    function readTaskZips(t){
+      // Supports your current schema: zips[] plus optional homeZip
+      const zips = [];
+      if(t.homeZip) zips.push(safeStr(t.homeZip));
+      if(Array.isArray(t.zips)) t.zips.forEach(z => zips.push(safeStr(z)));
+      if(t.zip) zips.push(safeStr(t.zip));
+      return [...new Set(zips.map(z=>z.trim()).filter(Boolean))];
+    }
 
     function renderJobCard(t){
       const title = safeStr(t.title || t.category || "Task");
       const pay = (t.pay != null) ? money(t.pay) : "—";
 
-      // ✅ FIX: customer uses homeZip + zips[], not zip
-      const zipDisplay = safeStr(
-        t.homeZip ||
-        (Array.isArray(t.zips) ? t.zips.join(", ") : "") ||
-        t.zip ||
-        "—"
-      );
+      const zipList = readTaskZips(t);
+      const zipDisplay = zipList.length ? zipList.join(", ") : "—";
 
+      const st = readTaskState(t);
       const when = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString() : "";
 
       const el = document.createElement("div");
@@ -781,6 +867,7 @@
         </div>
         <div class="meta">
           <span>ZIP(s): ${zipDisplay}</span>
+          ${st ? `<span>State: ${st}</span>` : ``}
           ${when ? `<span>Posted: ${when}</span>` : ``}
         </div>
         <div class="desc">${safeStr(t.details || t.description || "No details provided.")}</div>
@@ -802,7 +889,8 @@
         try{
           await addDoc(collection(db, "taskInterests"), {
             taskId: t.id,
-            taskZip: t.homeZip || (Array.isArray(t.zips) ? t.zips[0] : null) || t.zip || null,
+            taskZip: (readTaskZips(t)[0] || null),
+            taskState: readTaskState(t) || null,
             taskTitle: t.title || t.category || "Task",
             taskerUid: currentUser.uid,
             taskerEmail: currentUser.email || null,
@@ -821,14 +909,162 @@
       jobsWrap.appendChild(el);
     }
 
+    function setZipLine(){
+      const zip = (taskerProfile?.zip || "").trim();
+      const st = normalizeState(taskerProfile?.state || "");
+      const zipPart = "ZIP: " + (zip || "— (set your ZIP in Profile)");
+      const statePart = st ? (" • State: " + st) : "";
+      zipLine.textContent = zipPart + statePart;
+    }
+
+    function showExpandPanel(shouldShow){
+      expandPanel.style.display = shouldShow ? "block" : "none";
+      if(shouldShow){
+        // prefill state picker from profile if available
+        const st = normalizeState(taskerProfile?.state || "");
+        if(st) stateSelect.value = st;
+      }
+    }
+
+    async function loadJobs(){
+      hide(jobsErr); hide(jobsOk);
+      hide(jobsErrLeft); hide(jobsOkLeft);
+      jobsWrap.innerHTML = "";
+      jobsEmpty.style.display = "none";
+      showExpandPanel(false);
+
+      if(!currentUser) {
+        jobsEmpty.style.display = "";
+        jobsEmpty.textContent = "Sign in to see jobs.";
+        return;
+      }
+      if(!taskerProfile) return;
+
+      setZipLine();
+
+      const zip = (taskerProfile.zip || "").trim();
+      const stProfile = normalizeState(taskerProfile.state || "");
+
+      // enforce requirements per scope
+      if(searchScope === "zip"){
+        setScopeButtons("zip");
+        if(!zip){
+          jobsEmpty.style.display = "";
+          jobsEmpty.textContent = "Set your ZIP in Profile to see nearby jobs.";
+          return;
+        }
+      } else {
+        setScopeButtons("state");
+        if(!stProfile && !normalizeState(stateSelect.value)){
+          jobsEmpty.style.display = "";
+          jobsEmpty.textContent = "Pick your state below to browse statewide tasks.";
+          showExpandPanel(true);
+          return;
+        }
+      }
+
+      try{
+        let taskDocs = [];
+
+        if(searchScope === "zip"){
+          // Match customer schema: tasks target ZIPs via `zips: [ ... ]`
+          const qOpenByZipArray = query(
+            collection(db, "tasks"),
+            where("zips", "array-contains", zip),
+            where("status", "==", "open"),
+            limit(25)
+          );
+
+          const snaps = await getDocs(qOpenByZipArray);
+          snaps.forEach(s=>taskDocs.push({ id:s.id, ...s.data() }));
+        } else {
+          // STATE browse mode:
+          // Avoid composite-index pain: query by status only, then filter client-side by state.
+          // (Cheaper index-wise; slightly more reads. You can optimize later with a state+status index.)
+          const st = normalizeState(stateSelect.value) || stProfile;
+          const qOpen = query(
+            collection(db, "tasks"),
+            where("status", "==", "open"),
+            limit(75)
+          );
+          const snaps = await getDocs(qOpen);
+          snaps.forEach(s=>{
+            const t = { id:s.id, ...s.data() };
+            if(readTaskState(t) === st) taskDocs.push(t);
+          });
+        }
+
+        // sort client-side (no index needed)
+        taskDocs.sort((a,b)=>{
+          const at = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+          const bt = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+          return bt - at;
+        });
+
+        if(taskDocs.length === 0){
+          jobsEmpty.style.display = "";
+          if(searchScope === "zip"){
+            jobsEmpty.textContent = "No open jobs found in your ZIP yet. Expand to your state to browse more.";
+            showExpandPanel(true);
+          } else {
+            jobsEmpty.textContent = "No open jobs found in your state yet. Check back soon.";
+          }
+          return;
+        }
+
+        taskDocs.forEach(t => renderJobCard(t));
+      }catch(e){
+        show(jobsErr, e?.message || String(e));
+        show(jobsErrLeft, "Trouble loading tasks. See details on the right.");
+      }
+    }
+
     refreshJobsBtn.addEventListener("click", loadJobs);
     dockRefresh.addEventListener("click", ()=>{ setActiveTab("jobs"); loadJobs(); });
+
+    // Scope buttons
+    scopeZipBtn.addEventListener("click", ()=>{
+      searchScope = "zip";
+      showExpandPanel(false);
+      loadJobs();
+    });
+
+    scopeStateBtn.addEventListener("click", ()=>{
+      searchScope = "state";
+      // if profile has state, keep it; else show picker panel
+      showExpandPanel(true);
+      loadJobs();
+    });
+
+    applyStateBtn.addEventListener("click", ()=>{
+      const st = normalizeState(stateSelect.value) || normalizeState(taskerProfile?.state || "");
+      if(!st){
+        show(jobsErr, "Select a state first.");
+        return;
+      }
+      // optionally persist to profile so future logins are easier
+      if(currentUser && st && normalizeState(taskerProfile?.state || "") !== st){
+        saveTaskerProfilePatch(currentUser.uid, { state: st, updatedAt: serverTimestamp() })
+          .then(()=>{ taskerProfile = { ...taskerProfile, state: st }; setZipLine(); })
+          .catch(()=>{ /* ignore */ });
+      }
+      searchScope = "state";
+      setScopeButtons("state");
+      loadJobs();
+    });
+
+    backToZipBtn.addEventListener("click", ()=>{
+      searchScope = "zip";
+      showExpandPanel(false);
+      loadJobs();
+    });
 
     // ===================== Profile UI =====================
     async function paintProfileUI(){
       if(!currentUser || !taskerProfile) return;
       profEmail.value = currentUser.email || "";
       profZip.value = taskerProfile.zip || "";
+      profState.value = normalizeState(taskerProfile.state || "");
       profInterests.value = Array.isArray(taskerProfile.interests) ? taskerProfile.interests.join(", ") : "";
     }
 
@@ -840,7 +1076,6 @@
         await paintProfileUI();
         renderDashboard();
         await loadJobs();
-        await centerMapFromProfileOrGeo();
         show(profOk, "Profile reloaded.");
       }catch(e){
         show(profErr, e?.message || String(e));
@@ -852,6 +1087,7 @@
       if(!currentUser) return show(profErr, "Sign in first.");
 
       const zip = (profZip.value || "").trim();
+      const state = normalizeState(profState.value || "");
       const interests = (profInterests.value || "")
         .split(",")
         .map(s=>s.trim())
@@ -860,14 +1096,18 @@
       try{
         await saveTaskerProfilePatch(currentUser.uid, {
           zip: zip || null,
+          state: state || null,
           interests,
           updatedAt: serverTimestamp()
         });
-        taskerProfile = { ...taskerProfile, zip: zip || null, interests };
-        zipLine.textContent = "ZIP: " + (zip || "— (set your ZIP in Profile)");
+        taskerProfile = { ...taskerProfile, zip: zip || null, state: state || null, interests };
+        setZipLine();
         show(profOk, "Saved.");
+
+        // if you just saved a state and you’re in state mode, ensure picker matches
+        if(state) stateSelect.value = state;
+
         await loadJobs();
-        await centerMapFromProfileOrGeo();
       }catch(e){
         show(profErr, e?.message || String(e));
       }
@@ -895,6 +1135,7 @@
       currentUser = user;
 
       hide(jobsErr); hide(jobsOk);
+      hide(jobsErrLeft); hide(jobsOkLeft);
       hide(profOk); hide(profErr);
       hide(walletOk); hide(walletErr);
 
@@ -909,12 +1150,16 @@
         jobsWrap.innerHTML = "";
         jobsEmpty.style.display = "";
         jobsEmpty.textContent = "Sign in to see jobs.";
+        showExpandPanel(false);
 
         balances2.innerHTML = "";
         levelNum2.textContent = "1";
         levelBar2.style.width = "0%";
         badges1.innerHTML = "";
-        await centerMapDefault();
+
+        // reset scope
+        searchScope = "zip";
+        setScopeButtons("zip");
         return;
       }
 
@@ -932,98 +1177,22 @@
         await paintProfileUI();
         renderDashboard();
 
+        // keep state picker aligned
+        const st = normalizeState(taskerProfile.state || "");
+        if(st) stateSelect.value = st;
+
         setActiveTab("jobs");
+        setZipLine();
         await loadJobs();
-        await centerMapFromProfileOrGeo();
       }catch(e){
         show(jobsErr, e?.message || String(e));
+        show(jobsErrLeft, "Trouble loading tasks. See details on the right.");
       }
     });
 
     // Initial
     setActiveTab("jobs");
-
-    // ===================== Google Maps helpers (called by global initMap) =====================
-    function validZip(v){ return /^\d{5}$/.test(v); }
-
-    async function centerMapDefault(){
-      if(window.__workishMap){
-        window.__workishMap.setCenter({ lat: 38.9072, lng: -77.0369 });
-        window.__workishMap.setZoom(8);
-      }
-    }
-
-    async function showZipOnMap(zip){
-      if(!window.__workishGeocoder || !window.__workishMap) return false;
-      if(!validZip(zip)) return false;
-
-      const address = `${zip}, USA`;
-      return new Promise((resolve)=>{
-        window.__workishGeocoder.geocode({ address }, (results, status)=>{
-          if(status === "OK" && results && results[0]){
-            const r = results[0];
-            if(r.geometry && r.geometry.viewport){
-              window.__workishMap.fitBounds(r.geometry.viewport);
-            } else if(r.geometry && r.geometry.location){
-              window.__workishMap.setCenter(r.geometry.location);
-              window.__workishMap.setZoom(13);
-            }
-            if(window.__workishMarker) window.__workishMarker.setMap(null);
-            window.__workishMarker = new google.maps.Marker({ map: window.__workishMap, position: r.geometry.location, title: zip });
-            resolve(true);
-          } else {
-            resolve(false);
-          }
-        });
-      });
-    }
-
-    async function centerMapFromProfileOrGeo(){
-      const zip = (taskerProfile?.zip || "").trim();
-      if(zip){
-        const ok = await showZipOnMap(zip);
-        if(ok) return;
-      }
-
-      if(navigator.geolocation && window.__workishMap){
-        navigator.geolocation.getCurrentPosition((pos)=>{
-          const { latitude, longitude } = pos.coords;
-          const loc = { lat: latitude, lng: longitude };
-          window.__workishMap.setCenter(loc);
-          window.__workishMap.setZoom(12);
-          if(window.__workishMarker) window.__workishMarker.setMap(null);
-          window.__workishMarker = new google.maps.Marker({ map: window.__workishMap, position: loc, title: "You are here" });
-        }, ()=>centerMapDefault(), { enableHighAccuracy:false, timeout:4000 });
-      } else {
-        await centerMapDefault();
-      }
-    }
-
-    window.__workishCenterMapFromProfileOrGeo = centerMapFromProfileOrGeo;
+    setScopeButtons("zip");
   </script>
-
-  <!-- Google Maps init -->
-  <script>
-    function initMap(){
-      const el = document.getElementById('map');
-      if(!el || !window.google || !google.maps) return;
-
-      window.__workishMap = new google.maps.Map(el, {
-        center: { lat: 38.9072, lng: -77.0369 },
-        zoom: 8,
-        mapTypeControl: false,
-        streetViewControl: false,
-        fullscreenControl: false,
-      });
-      window.__workishGeocoder = new google.maps.Geocoder();
-      window.__workishMarker = null;
-
-      if(window.__workishCenterMapFromProfileOrGeo){
-        window.__workishCenterMapFromProfileOrGeo();
-      }
-    }
-  </script>
-
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBoWDFtsT7GAhFqxEI91PlmzzUxoXUjhaU&callback=initMap"></script>
 </body>
 </html>
