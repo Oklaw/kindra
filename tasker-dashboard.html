@@ -541,6 +541,62 @@
     const auth = getAuth(app);
     const db = getFirestore(app);
 
+    // ===================== ZIP META (ZIP -> state) =====================
+    // Change this if your file name differs.
+    const ZIP_META_URL = "/data/zip_meta.json";
+
+    // Cache in-memory
+    let __zipMeta = null;
+
+    async function loadZipMetaOnce(){
+      if(__zipMeta) return __zipMeta;
+      try{
+        const res = await fetch(ZIP_META_URL, { cache: "force-cache" });
+        if(!res.ok) throw new Error("ZIP meta not found at " + ZIP_META_URL);
+        __zipMeta = await res.json();
+        if(!__zipMeta || typeof __zipMeta !== "object") __zipMeta = {};
+      }catch{
+        __zipMeta = {}; // graceful fallback
+      }
+      return __zipMeta;
+    }
+
+    function safeStr(v){ return (v === null || v === undefined) ? "" : String(v); }
+    function normalizeState(s){
+      const v = safeStr(s).trim().toUpperCase();
+      return /^[A-Z]{2}$/.test(v) ? v : "";
+    }
+
+    // Prefer explicit task state. If missing, infer from task zip via zip_meta.json.
+    async function inferStateFromTask(t){
+      const explicit = normalizeState(t.state || t.homeState || t.taskState || "");
+      if(explicit) return explicit;
+
+      const z = readTaskZips(t)[0];
+      if(!z) return "";
+
+      const meta = await loadZipMetaOnce();
+      const entry = meta?.[String(z).trim()];
+      const st = normalizeState(entry?.state || entry?.st || "");
+      return st || "";
+    }
+
+    function readTaskZips(t){
+      const zips = [];
+      if(t.homeZip) zips.push(safeStr(t.homeZip));
+      if(Array.isArray(t.zips)) t.zips.forEach(z => zips.push(safeStr(z)));
+      if(t.zip) zips.push(safeStr(t.zip));
+      return [...new Set(zips.map(z=>z.trim()).filter(Boolean))];
+    }
+
+    function show(el, msg){ el.textContent = msg; el.style.display = "block"; }
+    function hide(el){ el.style.display="none"; }
+    function money(n){
+      const v = Number(n || 0);
+      return "$" + v.toLocaleString(undefined,{maximumFractionDigits:0});
+    }
+
+    // ===================== UI refs =====================
     const whoChip = document.getElementById("whoChip");
     const signInBtn = document.getElementById("signInBtn");
     const signOutBtn = document.getElementById("signOutBtn");
@@ -593,50 +649,6 @@
     const applyStateBtn = document.getElementById("applyStateBtn");
     const backToZipBtn = document.getElementById("backToZipBtn");
 
-    function show(el, msg){ el.textContent = msg; el.style.display = "block"; }
-    function hide(el){ el.style.display="none"; }
-    function money(n){
-      const v = Number(n || 0);
-      return "$" + v.toLocaleString(undefined,{maximumFractionDigits:0});
-    }
-    function safeStr(v){ return (v === null || v === undefined) ? "" : String(v); }
-    function normalizeState(s){
-      const v = safeStr(s).trim().toUpperCase();
-      return /^[A-Z]{2}$/.test(v) ? v : "";
-    }
-
-    // ✅ NEW: infer state from zip when tasks don't store `state`
-    // This is accurate for VA (and covers 20169).
-    function inferStateFromZip(zip){
-      const z = parseInt(safeStr(zip).trim(), 10);
-      if(!Number.isFinite(z)) return "";
-
-      // VA includes 201xx (Northern VA) and 220xx–246xx (most VA)
-      if((z >= 20100 && z <= 20199) || (z >= 22000 && z <= 24699)) return "VA";
-
-      return "";
-    }
-
-    function readTaskState(t){
-      const explicit = normalizeState(t.state || t.homeState || t.taskState || "");
-      if(explicit) return explicit;
-
-      const zips = readTaskZips(t);
-      if(zips.length){
-        const inferred = inferStateFromZip(zips[0]);
-        if(inferred) return inferred;
-      }
-      return "";
-    }
-
-    function readTaskZips(t){
-      const zips = [];
-      if(t.homeZip) zips.push(safeStr(t.homeZip));
-      if(Array.isArray(t.zips)) t.zips.forEach(z => zips.push(safeStr(z)));
-      if(t.zip) zips.push(safeStr(t.zip));
-      return [...new Set(zips.map(z=>z.trim()).filter(Boolean))];
-    }
-
     function setScopeButtons(active){
       scopeZipBtn.classList.toggle("active", active === "zip");
       scopeStateBtn.classList.toggle("active", active === "state");
@@ -662,6 +674,7 @@
     dockWallet.addEventListener("click", ()=>setActiveTab("wallet"));
     dockProfile.addEventListener("click", ()=>setActiveTab("profile"));
 
+    // ===================== State =====================
     let currentUser = null;
     let taskerProfile = null;
     let searchScope = "zip";
@@ -681,6 +694,7 @@
       lastStreakWeek: null
     });
 
+    // ===================== Badges + Level + Visibility =====================
     function computeBadges(wallet){
       const goals = Array.isArray(wallet.goals) ? wallet.goals : [];
       const anyGoal = goals.length > 0;
@@ -695,6 +709,7 @@
       };
     }
     function badgeCount(b){ return Object.values(b).filter(Boolean).length; }
+
     function computeLevel(wallet){
       const jobs = Number(wallet.jobsCompleted||0);
       const saved = Number(wallet.savedTotal||0);
@@ -704,16 +719,19 @@
       const pct = Math.min(100, xp % 100);
       return { level, pct, xp };
     }
+
     function computeVisibility(wallet){
       const b = computeBadges(wallet);
       const bc = badgeCount(b);
       const { level } = computeLevel(wallet);
       const jobs = Number(wallet.jobsCompleted||0);
       const streak = Number(wallet.weeklyStreak||0);
+
       let score = 50 + (jobs * 2) + (bc * 6) + (level * 3) + (streak * 4);
       score = Math.max(0, Math.min(100, Math.round(score)));
       return score;
     }
+
     function badgeIcon(key){
       const map = {
         firstJob: "💼",
@@ -771,14 +789,17 @@
     function renderDashboard(){
       if(!taskerProfile) return;
       const wallet = taskerProfile.wallet || defaultWallet();
+
       renderBalances(balances2, wallet);
       const { level, pct } = computeLevel(wallet);
       levelNum2.textContent = String(level);
       levelBar2.style.width = pct + "%";
+
       renderBadges(badges1, wallet);
       visScoreEl.textContent = String(computeVisibility(wallet));
     }
 
+    // ===================== Firestore: profile =====================
     async function loadTaskerProfile(uid){
       const ref = doc(db, "taskers", uid);
       const snap = await getDoc(ref);
@@ -820,13 +841,14 @@
       }
     }
 
-    function renderJobCard(t){
+    function renderJobCard(t, stateForDisplay){
       const title = safeStr(t.title || t.category || "Task");
       const pay = (t.pay != null) ? money(t.pay) : "—";
       const zipList = readTaskZips(t);
       const zipDisplay = zipList.length ? zipList.join(", ") : "—";
-      const st = readTaskState(t);
       const when = t.createdAt?.toDate ? t.createdAt.toDate().toLocaleString() : "";
+
+      const st = normalizeState(stateForDisplay || "");
 
       const el = document.createElement("div");
       el.className = "job";
@@ -860,7 +882,7 @@
           await addDoc(collection(db, "taskInterests"), {
             taskId: t.id,
             taskZip: (readTaskZips(t)[0] || null),
-            taskState: readTaskState(t) || null,
+            taskState: st || null,
             taskTitle: t.title || t.category || "Task",
             taskerUid: currentUser.uid,
             taskerEmail: currentUser.email || null,
@@ -879,6 +901,7 @@
       jobsWrap.appendChild(el);
     }
 
+    // ===================== Jobs =====================
     async function loadJobs(){
       hide(jobsErr); hide(jobsOk);
       hide(jobsErrLeft); hide(jobsOkLeft);
@@ -916,7 +939,7 @@
       }
 
       try{
-        let taskDocs = [];
+        const taskDocs = [];
 
         if(searchScope === "zip"){
           const qOpenByZipArray = query(
@@ -927,21 +950,45 @@
           );
           const snaps = await getDocs(qOpenByZipArray);
           snaps.forEach(s=>taskDocs.push({ id:s.id, ...s.data() }));
-        } else {
-          const st = normalizeState(stateSelect.value) || stProfile;
 
-          const qOpen = query(
-            collection(db, "tasks"),
-            where("status", "==", "open"),
-            limit(75)
-          );
-          const snaps = await getDocs(qOpen);
-
-          snaps.forEach(s=>{
-            const t = { id:s.id, ...s.data() };
-            // ✅ FIX: if task has no state, infer from zip
-            if(readTaskState(t) === st) taskDocs.push(t);
+          // render (no state filtering)
+          taskDocs.sort((a,b)=>{
+            const at = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0;
+            const bt = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0;
+            return bt - at;
           });
+
+          if(taskDocs.length === 0){
+            jobsEmpty.style.display = "";
+            jobsEmpty.textContent = "No open jobs found in your ZIP yet. Expand to your state to browse more.";
+            showExpandPanel(true);
+            return;
+          }
+
+          for(const t of taskDocs){
+            const st = await inferStateFromTask(t);
+            renderJobCard(t, st);
+          }
+          return;
+        }
+
+        // ===== STATE SCOPE =====
+        const desiredState = normalizeState(stateSelect.value) || stProfile;
+
+        // MVP: query open tasks, then filter client-side using zip_meta->state (or explicit state)
+        const qOpen = query(
+          collection(db, "tasks"),
+          where("status", "==", "open"),
+          limit(120)
+        );
+        const snaps = await getDocs(qOpen);
+
+        for(const s of snaps.docs){
+          const t = { id:s.id, ...s.data() };
+          const st = await inferStateFromTask(t);
+          if(st === desiredState){
+            taskDocs.push({ ...t, __computedState: st });
+          }
         }
 
         taskDocs.sort((a,b)=>{
@@ -952,16 +999,11 @@
 
         if(taskDocs.length === 0){
           jobsEmpty.style.display = "";
-          if(searchScope === "zip"){
-            jobsEmpty.textContent = "No open jobs found in your ZIP yet. Expand to your state to browse more.";
-            showExpandPanel(true);
-          } else {
-            jobsEmpty.textContent = "No open jobs found in your state yet. Check back soon.";
-          }
+          jobsEmpty.textContent = "No open jobs found in your state yet. Check back soon.";
           return;
         }
 
-        taskDocs.forEach(t => renderJobCard(t));
+        taskDocs.forEach(t => renderJobCard(t, t.__computedState || ""));
       }catch(e){
         show(jobsErr, e?.message || String(e));
         show(jobsErrLeft, "Trouble loading tasks. See details on the right.");
@@ -1004,6 +1046,7 @@
       loadJobs();
     });
 
+    // ===================== Profile UI =====================
     async function paintProfileUI(){
       if(!currentUser || !taskerProfile) return;
       profEmail.value = currentUser.email || "";
@@ -1054,6 +1097,7 @@
       }
     });
 
+    // ===================== Auth (prompt login MVP) =====================
     signInBtn.addEventListener("click", async ()=>{
       const email = prompt("Tasker email:");
       if(!email) return;
@@ -1113,6 +1157,9 @@
           await saveTaskerProfilePatch(user.uid, { wallet: taskerProfile.wallet });
         }
 
+        // Warm ZIP meta cache (best-effort) so state browse works immediately
+        loadZipMetaOnce();
+
         await paintProfileUI();
         renderDashboard();
 
@@ -1128,6 +1175,7 @@
       }
     });
 
+    // Initial
     setActiveTab("jobs");
     setScopeButtons("zip");
   </script>
