@@ -341,6 +341,15 @@
       return out;
     }
 
+    // ✅ NEW (FIX): store state on tasks (and optionally infer from ZIP if state isn’t provided anywhere)
+    function inferStateFromZip(zip){
+      const z = parseInt(String(zip || "").trim(), 10);
+      if(!Number.isFinite(z)) return "";
+      // VA includes 201xx (Northern VA) and 220xx–246xx (most VA)
+      if((z >= 20100 && z <= 20199) || (z >= 22000 && z <= 24699)) return "VA";
+      return "";
+    }
+
     // Nearby ZIP list state
     let nearbyZips = [];
 
@@ -429,6 +438,7 @@
                 ${date ? `<span class="badge">📅 ${escapeHtml(date)}</span>` : ""}
                 ${zipText ? `<span class="badge">📍 ${escapeHtml(zipText)}</span>` : ""}
                 ${payText ? `<span class="badge">💵 ${escapeHtml(payText)}</span>` : ""}
+                ${t.state ? `<span class="badge">🗺️ ${escapeHtml(String(t.state))}</span>` : ""}
               </div>
             </div>
             <span class="badge">${escapeHtml(t.status || "open")}</span>
@@ -561,7 +571,7 @@
     });
 
     // Post task: write one task that targets multiple ZIPs via a "zips" array.
-    // Later, taskers query using: where("zips","array-contains", taskerZip)
+    // ✅ FIX: also store `state` on the task so taskers can filter by state.
     taskForm?.addEventListener('submit', async (e) => {
       e.preventDefault();
       clearMsgs();
@@ -606,6 +616,10 @@
         // Best-effort: keep user profile updated
         await persistUserZips();
 
+        // ✅ Determine state (MVP): infer from primary ZIP.
+        // This fixes the "VA shows no tasks" issue when state browsing relies on state.
+        const taskState = inferStateFromZip(hz);
+
         await addDoc(collection(db, "tasks"), {
           ownerUid: user.uid,
           ownerEmail: user.email || "",
@@ -613,9 +627,14 @@
           category: cat,
           title: t,
           details: d,
+
           // IMPORTANT: This is what taskers will query on:
           zips: zipsTarget,                 // for array-contains queries
           homeZip: hz,                      // useful for display/audit
+
+          // ✅ NEW: store state for state-level browse
+          state: taskState || null,
+
           when: w,
           pay: Math.round(p),
           createdAt: serverTimestamp()
